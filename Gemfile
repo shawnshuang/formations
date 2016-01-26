@@ -16,7 +16,9 @@ gem 'jbuilder',       '2.2.3'
 gem 'sdoc',           '0.4.0', group: :doc
 
 # Allows web application to use Puma webserver on Heroku
-gem 'puma'
+gem 'puma',            '2.15.3'
+# ZURB's Foundation front-end framework
+gem 'foundation-rails', '6.1.2.0'
 
 group :development, :test do
   # Use sqlite3 as the database for Active Record
