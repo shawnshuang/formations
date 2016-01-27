@@ -1,10 +1,8 @@
-html {
+html, body {
     height: 100%;
-    body {
-        height: 100%;
-        margin: 0;
-        width: 100%;
-    }
+    margin: 0;
+    overflow-x: hidden;
+    width: 100%;
 }
 
 
@@ -43,18 +41,18 @@ html {
     }
 }
 
-.home-cover {
+.home-banner {
     background:
         linear-gradient(
             rgba(0, 0, 0, 0.6),
             rgba(0, 0, 0, 0.6)
         ),
-        image-url("home_cover.jpg");
+        image-url("home_banner.jpg");
     background-size: cover;
     height: 750px;
     margin-top: -250px;
     width: 100%;
-    .cover-text {
+    .banner-text {
         color: white;
         font-family: 'Lato', sans-serif;
         font-size: 3em;
@@ -98,8 +96,9 @@ html {
         color: white;
         font-family: 'Lato', sans-serif;
         font-size: 0.7em;
-        height: 20px;
-        margin-top: -10px;
+        height: 16px;
+        margin-bottom: 0px;
+        margin-top: -8px;
         position: absolute;
         top: 50%;
     }
