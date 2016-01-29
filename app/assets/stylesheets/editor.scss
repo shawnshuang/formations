@@ -1,18 +1,18 @@
 html {
-    font-family: 'Lato', sans-serif;
     min-height: 100%;
     overflow-x: hidden;
     width: 100%;
     body {
+        font-family: 'Lato', sans-serif;
         height: 100vh;
     }
 }
 
-/* Nav bar styling specific to the editor page. */
+/* Nav bar styling specific to the editor page */
 .editor {
     .top-bar {
-        background-color: #343c46;
-        padding: 0px;
+        background-color: #343C46;
+        padding: 0px 10px 0px 10px;
         .menu-text {
             color: white;
             font-weight: bold;
@@ -28,7 +28,7 @@ html {
     }
 }
 
-/* Styling for editor canvas & tool panels. */
+/* Styling for editor canvas & tool panels */
 .editor-wrapper {
     display: flex;
     flex-flow: row;
@@ -36,19 +36,17 @@ html {
     #filmstrip {
         background-color: #717B8C;
         float: left;
-        margin: 0 1.5% 0 0;
+        margin: 0 10px 0 0;
         width: 10%;
     }
     #formationsCanvas {
         background-color: #C6D0DF;
         float: left;
-        margin: 1% 0 1% 0;
-        width: 70%;
+        margin: 10px 0 10px 0;
     }
     #peopleCanvas {
         background-color: #717B8C;
         float: left;
-        margin: 0 0 0 1.5%;
-        width: 20%;
+        margin: 0 0 0 10px;
     }
 }
