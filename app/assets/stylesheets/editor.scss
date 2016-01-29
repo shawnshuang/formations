@@ -1,0 +1,54 @@
+html {
+    font-family: 'Lato', sans-serif;
+    min-height: 100%;
+    overflow-x: hidden;
+    width: 100%;
+    body {
+        height: 100vh;
+    }
+}
+
+/* Nav bar styling specific to the editor page. */
+.editor {
+    .top-bar {
+        background-color: #343c46;
+        padding: 0px;
+        .menu-text {
+            color: white;
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+        .top-bar-right {
+            margin-top: 4px;
+            a {
+                color: white;
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+/* Styling for editor canvas & tool panels. */
+.editor-wrapper {
+    display: flex;
+    flex-flow: row;
+    min-height: calc(100% - 46px);
+    #filmstrip {
+        background-color: #717B8C;
+        float: left;
+        margin: 0 1.5% 0 0;
+        width: 10%;
+    }
+    #formationsCanvas {
+        background-color: #C6D0DF;
+        float: left;
+        margin: 1% 0 1% 0;
+        width: 70%;
+    }
+    #peopleCanvas {
+        background-color: #717B8C;
+        float: left;
+        margin: 0 0 0 1.5%;
+        width: 20%;
+    }
+}

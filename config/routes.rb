@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-  root 'static_pages#home'
-  get  '/dashboard' => 'static_pages#dashboard'
+  root 'web_pages#home'
+  get  '/editor' => 'web_pages#editor'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
