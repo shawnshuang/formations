@@ -11,7 +11,7 @@ html {
 /* Nav bar styling specific to the editor page */
 .editor {
     .top-bar {
-        background-color: #343C46;
+        background-color: #556170;
         padding: 0px 10px 0px 10px;
         .menu-text {
             color: white;
@@ -34,19 +34,119 @@ html {
     flex-flow: row;
     min-height: calc(100% - 46px);
     #filmstrip {
-        background-color: #717B8C;
+        background-color: #D66860;
         float: left;
         margin: 0 10px 0 0;
         width: 10%;
     }
-    #formationsCanvas {
-        background-color: #C6D0DF;
+    #formation-canvas {
+        background-color: #D3DBDE;
         float: left;
         margin: 10px 0 10px 0;
     }
-    #peopleCanvas {
-        background-color: #717B8C;
+    #members-panel {
+        background-color: #D66860;
         float: left;
         margin: 0 0 0 10px;
+        width: 20%;
+        #members-panel-title {
+            border-bottom-color: white;
+            border-bottom-style: solid;
+            border-bottom-width: 2px;
+            color: white;
+            font-weight: bold;
+            margin: 0px 15px 0px 15px;
+            padding: 10px 0px 10px 0px;
+            text-align: center;
+        }
     }
+}
+
+/* Styling for members in members panel */
+.clearfix:after {
+   content: " ";
+   display: block; 
+   height: 0; 
+   clear: both;
+}
+.members-container {
+    margin: 15px auto;
+    width: 90%;
+    .indiv-member-container {
+        float: left;
+        height: 60px;
+        margin: 0px 14px 0px 14px;
+        text-align: center;
+        width: 30px;
+        .member-picture {
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            border-color: #556170;
+            border-radius: 50%;
+            border-style: solid;
+            border-width: 2px;
+            height: 30px;
+            width: 30px;
+            &:hover {
+                cursor: -webkit-grab;
+                cursor: grab;
+            }
+            &:active {
+                cursor: -webkit-grabbing;
+                cursor: grabbing;
+            }
+        }
+        .member-name {
+            color: white;
+            font-size: 0.8em;
+            margin-left: -100%;
+            margin-right: -100%;
+            text-align: center;
+        }
+        .chrystina {
+            background-image: image-url("chrystina.jpg");
+        }
+        .gordon {
+            background-image: image-url("gordon.jpg");
+        }
+        .jordan {
+            background-image: image-url("jordan.jpg");
+        }
+        .june {
+            background-image: image-url("june.jpg");
+        }
+        .kathy {
+            background-image: image-url("kathy.jpg");
+        }
+        .kelly {
+            background-image: image-url("kelly.jpg");
+        }
+        .mel {
+            background-image: image-url("mel.jpg");
+        }
+        .michael {
+            background-image: image-url("michael.jpg");
+        }
+        .mindy {
+            background-image: image-url("mindy.jpg");
+        }
+        .paul {
+            background-image: image-url("paul.jpg");
+        }
+        .robert {
+            background-image: image-url("robert.jpg");
+        }
+        .serena {
+            background-image: image-url("serena.jpg");
+        }
+        .shuang {
+            background-image: image-url("shuang.jpg");
+        }
+    }
+}
+
+/* Styling for drag and drop */
+.is-active {
+    z-index: 100;
 }

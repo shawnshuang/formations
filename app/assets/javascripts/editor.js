@@ -1,46 +1,60 @@
-function resizeCanvases() {
+/* Draws grid lines on formation canvas */
+function draw() {
+    var fCanvas = document.getElementById('formation-canvas');
+    var fHeight = fCanvas.height;
+    var fWidth = fCanvas.width;
+    var fCtx = fCanvas.getContext('2d');
+
+    fCtx.clearRect(0, 0, fWidth, fHeight);
+    fCtx.strokeStyle = '#C0C0C0';
+
+    var squareLen = Math.round(fWidth / 30);
+    for (var w = squareLen; w < fWidth; w += squareLen) {
+        fCtx.moveTo(w, 0);
+        fCtx.lineTo(w, fHeight);
+    }
+    for (var h = squareLen; h < fHeight; h += squareLen) {
+        fCtx.moveTo(0, h);
+        fCtx.lineTo(fWidth, h);
+    }
+    fCtx.stroke();
+}
+
+/* Resizes formation canvas based on new window size */
+function resizeCanvas() {
     var width = $(window).width();
     var height = $(window).height();
 
-    var fCanvas = document.getElementById('formationsCanvas');
+    var fCanvas = document.getElementById('formation-canvas');
     fCanvas.width = width * 0.7;
     fCanvas.height = height - 66;
     fCanvas.style.width = width * 0.7 + 'px';
     fCanvas.style.height = height - 66 + 'px';
 
-    var pCanvas = document.getElementById('peopleCanvas');
-    pCanvas.width = width * 0.2;
-    pCanvas.height = height - 46;
-    pCanvas.style.width = width * 0.2 + 'px';
-    pCanvas.style.height = height - 46 + 'px';
+    draw();
 
     console.log('canvases resized');
-};
+}
 
-var ready = function() {
-    if (window.location['pathname'] == '/editor') { 
+/* Actions to perform when page DOM is ready */
+function ready() {
+    if (window.location.pathname == '/editor') { 
         console.log('editor page ready');
 
-        resizeCanvases();
+        resizeCanvas();
 
-        var fCanvas = document.getElementById('formationsCanvas');
-        var fHeight = fCanvas.height;
-        var fWidth = fCanvas.width;
-        var fCtx = fCanvas.getContext('2d');
+        draw();
 
-        fCtx.clearRect(0, 0, fWidth, fHeight);
-        fCtx.strokeStyle = '#343C46';
-
-        fCtx.beginPath();
-        fCtx.moveTo(10.5, 10.5);
-        fCtx.lineTo(10.5, fHeight-10.5);
-        fCtx.stroke();
+        // initialize draggable's
+        [].slice.call(document.querySelectorAll('.member-picture')).forEach(function(element) {
+            new Draggable(element);
+        });
     }
-};
+}
 
 $(window).load(function() {
     console.log('window loaded');
 
     $(document).ready(ready);
-    $(window).resize(resizeCanvases);
+    $(window).resize(resizeCanvas);
 });

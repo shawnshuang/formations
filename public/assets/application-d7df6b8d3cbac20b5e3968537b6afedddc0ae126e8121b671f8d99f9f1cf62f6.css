@@ -872,28 +872,135 @@ kbd {
 .top-bar-right {
   float: right; }
 html {
-  height: 100%; }
+  min-height: 100%;
+  overflow-x: hidden;
+  width: 100%; }
   html body {
-    height: 100%;
-    margin: 0;
-    width: 100%; }
+    font-family: 'Lato', sans-serif;
+    height: 100vh; }
 
-.top-bar {
+/* Nav bar styling specific to the editor page */
+.editor .top-bar {
+  background-color: #556170;
+  padding: 0px 10px 0px 10px; }
+  .editor .top-bar .menu-text {
+    color: white;
+    font-weight: bold;
+    font-size: 1.5em; }
+  .editor .top-bar .top-bar-right {
+    margin-top: 4px; }
+    .editor .top-bar .top-bar-right a {
+      color: white;
+      font-weight: bold; }
+
+/* Styling for editor canvas & tool panels */
+.editor-wrapper {
+  display: flex;
+  flex-flow: row;
+  min-height: calc(100% - 46px); }
+  .editor-wrapper #filmstrip {
+    background-color: #D66860;
+    float: left;
+    margin: 0 10px 0 0;
+    width: 10%; }
+  .editor-wrapper #formation-canvas {
+    background-color: #D3DBDE;
+    float: left;
+    margin: 10px 0 10px 0; }
+  .editor-wrapper #members-panel {
+    background-color: #D66860;
+    float: left;
+    margin: 0 0 0 10px;
+    width: 20%; }
+    .editor-wrapper #members-panel #members-panel-title {
+      border-bottom-color: white;
+      border-bottom-style: solid;
+      border-bottom-width: 2px;
+      color: white;
+      font-weight: bold;
+      margin: 0px 15px 0px 15px;
+      padding: 10px 0px 10px 0px;
+      text-align: center; }
+
+/* Styling for members in members panel */
+.clearfix:after {
+  content: " ";
+  display: block;
+  height: 0;
+  clear: both; }
+
+.members-container {
+  margin: 15px auto;
+  width: 90%; }
+  .members-container .indiv-member-container {
+    float: left;
+    height: 60px;
+    margin: 0px 14px 0px 14px;
+    text-align: center;
+    width: 30px; }
+    .members-container .indiv-member-container .member-picture {
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      border-color: #556170;
+      border-radius: 50%;
+      border-style: solid;
+      border-width: 2px;
+      height: 30px;
+      width: 30px; }
+      .members-container .indiv-member-container .member-picture:hover {
+        cursor: -webkit-grab;
+        cursor: grab; }
+      .members-container .indiv-member-container .member-picture:active {
+        cursor: -webkit-grabbing;
+        cursor: grabbing; }
+    .members-container .indiv-member-container .member-name {
+      color: white;
+      font-size: 0.8em;
+      margin-left: -100%;
+      margin-right: -100%;
+      text-align: center; }
+    .members-container .indiv-member-container .chrystina {
+      background-image: url(/assets/chrystina-8ac0e385c5b2ca0645fabf0ce8363f2fda234e884ae28a8752d28333a10c20c3.jpg); }
+    .members-container .indiv-member-container .gordon {
+      background-image: url(/assets/gordon-e863ddaa67192fac80c7194d2e0ae8d7180e9120748ff41300f6955377528813.jpg); }
+    .members-container .indiv-member-container .jordan {
+      background-image: url(/assets/jordan-e30ebb2dcac2b58db375edadae0942109f317affab1ed1a81499ead48f9150f1.jpg); }
+    .members-container .indiv-member-container .june {
+      background-image: url(/assets/june-2c494003de5ae4ddbad61fe3116e2240fcdadb5c7ad9f010b48734a0ed59ff09.jpg); }
+    .members-container .indiv-member-container .kathy {
+      background-image: url(/assets/kathy-7ca80a18308c1c2f6cf404b9450a894af924c8a8b2b858a52add5083b0640994.jpg); }
+    .members-container .indiv-member-container .kelly {
+      background-image: url(/assets/kelly-275ce2f0c581d9585837eb1c5a2b3384172428149c34021d2a5f7e65b1b6c649.jpg); }
+    .members-container .indiv-member-container .mel {
+      background-image: url(/assets/mel-11b0b623d92eda60f5762396c2384c8d9783072709b3ddb558f044761afb75f7.jpg); }
+    .members-container .indiv-member-container .michael {
+      background-image: url(/assets/michael-f2b06f2adbcd07694414d1d58cff5455c816063b2954b4a6b75fb0f9af1dc56c.jpg); }
+    .members-container .indiv-member-container .mindy {
+      background-image: url(/assets/mindy-da6b4070d13d8908ac0280de5d48b83085e5bb6be09d9ae6dcdef5c87c6e8820.jpg); }
+    .members-container .indiv-member-container .paul {
+      background-image: url(/assets/paul-a1ccf7d8a41ab2085ed9cd4e53aae0caaa5f448506f02ba4181ffd274902c2e6.jpg); }
+    .members-container .indiv-member-container .robert {
+      background-image: url(/assets/robert-a5691f1b88336b892b25807ff30552d9b7378c5b89f5d4a3ee6a74347ba2ecf2.jpg); }
+    .members-container .indiv-member-container .serena {
+      background-image: url(/assets/serena-4a55c25b6885517392231ec1aac1d171a87d14e539a04261f743e5cf79dd004b.jpg); }
+    .members-container .indiv-member-container .shuang {
+      background-image: url(/assets/shuang-048548137050919db240f4ec42984e3ef224aa7de4d4525e273dd0f53c8175dc.jpg); }
+.home .top-bar {
   background-color: transparent;
   color: white;
-  font-family: 'Lato', sans-serif;
   padding: 15px 55px 15px 40px; }
-  .top-bar .text-logo {
+  .home .top-bar .text-logo {
     font-size: 2em; }
-  .top-bar .top-bar-right {
+  .home .top-bar .top-bar-right {
     margin-top: 8px; }
-    .top-bar .top-bar-right .menu-link {
+    .home .top-bar .top-bar-right .menu-link {
       color: white;
       font-weight: bold;
       transition: color .2s linear 0s; }
-      .top-bar .top-bar-right .menu-link:hover {
+      .home .top-bar .top-bar-right .menu-link:hover {
         color: #A0A0A0; }
-    .top-bar .top-bar-right .sign-in {
+    .home .top-bar .top-bar-right .sign-in {
       border-color: white;
       border-radius: 15px;
       border-style: solid;
@@ -902,42 +1009,48 @@ html {
       font-weight: bold;
       margin-left: 15px;
       transition: color .2s linear 0s, border .2s linear 0s; }
-      .top-bar .top-bar-right .sign-in:hover {
+      .home .top-bar .top-bar-right .sign-in:hover {
         border-color: #A0A0A0;
         color: #A0A0A0; }
 
-.home-cover {
-  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(/assets/home_cover-1507eea7e120eb6b2dbd1e3d4a52148bcd3f755069875b0e60bde9abd19ba10c.jpg);
-  background-size: cover;
-  height: 750px;
-  margin-top: -250px;
-  width: 100%; }
-  .home-cover .cover-text {
+.home-banner {
+  /* .dark-filter { */
+  /* } */ }
+  .home-banner .banner-text {
     color: white;
-    font-family: 'Lato', sans-serif;
     font-size: 3em;
     font-weight: bold;
-    padding: 400px 400px 0px 400px;
-    text-align: center; }
+    text-align: center;
+    position: absolute;
+    top: 30%;
+    width: 100%; }
+  .home-banner .banner-image {
+    left: 50%;
+    margin-bottom: -350px;
+    min-height: 600px;
+    min-width: 972px;
+    position: relative;
+    top: -250px;
+    transform: translateX(-50%);
+    z-index: -100; }
 
 .how-it-works {
+  background-color: white;
   height: 300px;
-  margin-top: 10px;
+  padding: 5px 0px 0px 0px;
   text-align: center; }
   .how-it-works p {
     color: gray;
-    font-family: 'Lato', sans-serif;
     font-size: 2em;
     font-weight: bold; }
 
 .why-formations {
   background-color: gray;
   height: 300px;
-  padding: 10px 0px 0px 0px;
+  padding: 5px 0px 0px 0px;
   text-align: center; }
   .why-formations p {
     color: white;
-    font-family: 'Lato', sans-serif;
     font-size: 2em;
     font-weight: bold; }
 
@@ -948,17 +1061,12 @@ html {
   position: relative; }
   .footer p {
     color: white;
-    font-family: 'Lato', sans-serif;
     font-size: 0.7em;
-    height: 20px;
-    margin-top: -10px;
+    height: 16px;
+    margin-bottom: 0px;
+    margin-top: -8px;
     position: absolute;
     top: 50%; }
-/*
-  Place all the styles related to the matching controller here.
-  They will automatically be included in application.css.
-*/
-
 /*
  * This is a manifest file that'll be compiled into application.css, which will include all the files
  * listed below.
