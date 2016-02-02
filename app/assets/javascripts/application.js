@@ -13,10 +13,8 @@
 //= require jquery
 //= require jquery.turbolinks
 //= require jquery_ujs
+//= require jquery-ui/draggable
 //= require foundation
-//= require classie
-//= require draggabilly.pkgd.min
-//= require drag_and_drop
 //= require editor
 //= require turbolinks
 

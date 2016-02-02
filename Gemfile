@@ -17,10 +17,13 @@ gem 'sdoc',           '0.4.0', group: :doc
 
 # Allows web application to use Puma webserver on Heroku
 gem 'puma',              '2.15.3'
-# ZURB's Foundation front-end framework
-gem 'foundation-rails',  '6.1.2.0'
 # jQuery plugin for drop-in fix binded events problem caused by Turbolinks
 gem 'jquery-turbolinks', '2.1.0'
+# Packages jQuery UI assets (Javascripts, stylesheets, and images) for Rails
+# asset pipeline
+gem 'jquery-ui-rails',   '5.0.5'
+# ZURB's Foundation front-end framework
+gem 'foundation-rails',  '6.1.2.0'
 
 group :development, :test do
   # Use sqlite3 as the database for Active Record

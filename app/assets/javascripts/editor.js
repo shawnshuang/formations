@@ -45,9 +45,15 @@ function ready() {
 
         draw();
 
-        // initialize draggable's
-        [].slice.call(document.querySelectorAll('.member-picture')).forEach(function(element) {
-            new Draggable(element);
+        $('.chrystina').draggable({
+            containment: document.body,
+            scroll: false,
+            start: function() {
+                $('.chrystina').addClass('being-dragged');
+            },
+            stop: function() {
+                $('.chrystina').removeClass('being-dragged');
+            }
         });
     }
 }

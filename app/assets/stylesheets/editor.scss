@@ -79,6 +79,7 @@ html {
         text-align: center;
         width: 30px;
         .member-picture {
+            -webkit-transition: -webkit-transform 0.2s linear 0s, opacity 0.2s linear 0s;
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
@@ -146,7 +147,9 @@ html {
     }
 }
 
-/* Styling for drag and drop */
-.is-active {
-    z-index: 100;
+/* Styling for drag and drop interactions */
+.being-dragged {
+  -webkit-transform: scale(1.5, 1.5);
+  -webkit-transition: -webkit-transform 0.2s linear 0s, opacity 0.2s linear 0s;
+  opacity: 0.5;
 }
