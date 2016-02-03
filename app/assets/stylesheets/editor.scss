@@ -39,7 +39,7 @@ html {
         margin: 0 10px 0 0;
         width: 10%;
     }
-    #formation-canvas {
+    #canvas {
         background-color: #D3DBDE;
         float: left;
         margin: 10px 0 10px 0;
@@ -149,7 +149,7 @@ html {
 
 /* Styling for drag and drop interactions */
 .being-dragged {
-  -webkit-transform: scale(1.5, 1.5);
-  -webkit-transition: -webkit-transform 0.2s linear 0s, opacity 0.2s linear 0s;
-  opacity: 0.5;
+    -webkit-transform: scale(1.5, 1.5);
+    -webkit-transition: -webkit-transform 0.2s linear 0s, opacity 0.2s linear 0s;
+    opacity: 0.2;
 }
