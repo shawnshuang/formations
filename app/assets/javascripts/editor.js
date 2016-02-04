@@ -2,7 +2,7 @@
 var squareLen;
 
 /* Draw grid lines on canvas */
-function draw() {
+function drawGrid() {
     var canvas = document.getElementById('canvas');
     var canvasHeight = canvas.height;
     var canvasWidth = canvas.width;
@@ -40,7 +40,7 @@ function resizeCanvas() {
     canvas.style.width = windowWidth * 0.7 + 'px';
     canvas.style.height = windowHeight - 66 + 'px';
 
-    // draw();
+    drawGrid();
 
     console.log('canvas resized');
 }
@@ -50,47 +50,63 @@ function ready() {
     if (window.location.pathname == '/editor') { 
         console.log('editor page ready');
 
+        // Configure canvas size and draw canvas when editor page first loads
         resizeCanvas();
 
-        draw();
+        // Create array of member icons
+        var members = [].slice.call(document.getElementsByClassName('member-icon'));
 
-        // var startX, startY, dropX, dropY;
+        // Track initial left and top offsets for member icons
+        var startingOffsets = {};
+        members.forEach(function(member) {
+            startingOffsets[member.id] = { left: member.offsetLeft, top: member.offsetTop };
+        });
 
-        [].slice.call(document.querySelectorAll('.member-picture')).forEach(function(element) {
-            $(element).draggable({
+        // Variables for tracking coordinates of closest grid intersection for dropping member icon
+        var dropX;
+        var dropy;
+
+        // Enable jQuery draggable functionality on each member icon DOM element
+        members.forEach(function(member) {
+            $(member).draggable({
+                // Constrained area allowed for dragging 
                 containment: document.body,
+                // No auto-scroll when dragging
                 scroll: false,
+                // Start callback function for when dragging starts
                 start: function(event) {
-                    startX = event.clientX;
-                    startY = event.clientY;
-                    $(element).addClass('being-dragged');
-                }, 
+                    // Add being-dragged styling
+                    $(member).addClass('being-dragged');
+                },
+                // Drag callback function for during dragging
                 drag: function(event) {
                     var canvas = document.getElementById('canvas');
                     var canvasHeight = canvas.height;
                     var canvasWidth = canvas.width;
                     var canvasContext = canvas.getContext('2d');
 
-                    // X- and y-coordinates of cursor within canvas
+                    // X- and y-coordinates of cursor respective to the canvas
                     var canvasX = event.clientX - canvas.offsetLeft;
                     var canvasY = event.clientY - canvas.offsetTop;
 
                     // If the cursor is within the boundaries of the canvas
                     if ((canvasX >= 0 && canvasX <= canvasWidth) && (canvasY >= 0 && canvasY <= canvasHeight)) {
-                        draw();
+                        // Clears canvas to delete previously drawn indicator for closest grid intersection
+                        drawGrid();
 
-                        // Variables for tracking grid intersection closest to cursor
-                        var closestX, closestY;
+                        // Find grid intersection closest to cursor during dragging
 
+                        var closestX;
+                        var closestY;
                         var fourCorners = [];
                         var smallestDist = Number.MAX_VALUE;
 
                         var modX = Math.floor(canvasX / squareLen);
                         var modY = Math.floor(canvasY / squareLen);
 
-                        fourCorners.push([modX * squareLen, modY * squareLen]);
+                        fourCorners.push([modX * squareLen,       modY * squareLen]);
                         fourCorners.push([(modX + 1) * squareLen, modY * squareLen]);
-                        fourCorners.push([modX * squareLen, (modY + 1) * squareLen]);
+                        fourCorners.push([modX * squareLen,       (modY + 1) * squareLen]);
                         fourCorners.push([(modX + 1) * squareLen, (modY + 1) * squareLen]);
 
                         for (var i = 0; i < fourCorners.length; i++) {
@@ -103,23 +119,30 @@ function ready() {
                                 closestY = currY;
                             }
                         }
-                        dropX = closestX;
-                        dropY = closestY;
 
+                        // Draw a small grey circle at the determined closest grid intersection
                         canvasContext.beginPath();
                         canvasContext.arc(closestX, closestY, 10, 0, 2*Math.PI);
                         canvasContext.strokeStyle = '#C0C0C0';
                         canvasContext.stroke();
                         canvasContext.fillStyle = '#C0C0C0';
                         canvasContext.fill();
+
+                        // Track coordinates of closest grid intersection
+                        dropX = closestX;
+                        dropY = closestY;
                     }
                 },
+                // Stop callback function for when dragging stops
                 stop: function(event) {
-                    var canvas = document.getElementById('canvas');
-                    $(element).removeClass('being-dragged');
+                    // Remove being-dragged styling
+                    $(member).removeClass('being-dragged');
 
-                    // $(event.target).css('left', dropX - startX);
-                    // $(event.target).css('top', dropY - startY);
+                    var canvas = document.getElementById('canvas');
+
+                    // Drop member icon to closest grid intersection
+                    $(event.target).css('left', dropX + canvas.offsetLeft - startingOffsets[event.target.id].left - 15);
+                    $(event.target).css('top', dropY + canvas.offsetTop - startingOffsets[event.target.id].top - 15);
                 }
             });
         });
