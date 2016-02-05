@@ -29,10 +29,11 @@ html {
 }
 
 /* Styling for editor canvas & tool panels */
-.editor-wrapper {
+#editor-wrapper {
     display: flex;
     flex-flow: row;
     min-height: calc(100% - 46px);
+    position: relative;
     #filmstrip {
         background-color: #D66860;
         float: left;
@@ -87,8 +88,8 @@ html {
             border-radius: 50%;
             border-style: solid;
             border-width: 2px;
-            height: 30px;
-            width: 30px;
+            height: 32px;
+            width: 32px;
             &:hover {
                 cursor: -webkit-grab;
                 cursor: grab;
@@ -149,7 +150,8 @@ html {
 
 /* Styling for drag and drop interactions */
 .being-dragged {
-    -webkit-transform: scale(1.5, 1.5);
-    -webkit-transition: -webkit-transform 0.2s linear 0s, opacity 0.2s linear 0s;
+    /* -webkit-transform: scale(1.5, 1.5); */
+    /* -webkit-transition: -webkit-transform 0.2s linear 0s, opacity 0.2s linear 0s; */
+    -webkit-transition: opacity 0.2s linear 0s;
     opacity: 0.2;
 }

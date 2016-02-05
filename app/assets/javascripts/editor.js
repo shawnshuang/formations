@@ -13,20 +13,60 @@ function drawGrid() {
     // Calculate the length of each grid square
     squareLen = Math.round(canvasWidth / 30);
 
-    // Draw horizontal lines
-    for (var w = squareLen; w < canvasWidth; w += squareLen) {
-        canvasContext.moveTo(w, 0);
-        canvasContext.lineTo(w, canvasHeight);
+    // Draw vertical lines (Note: the origin (0,0) exists at the upper-left corner)
+    for (var x = squareLen; x < canvasWidth; x += squareLen) {
+        canvasContext.moveTo(x, 0);
+        canvasContext.lineTo(x, canvasHeight);
     }
 
-    // Draw vertical lines
-    for (var h = squareLen; h < canvasHeight; h += squareLen) {
-        canvasContext.moveTo(0, h);
-        canvasContext.lineTo(canvasWidth, h);
+    // Draw horizontal lines
+    for (var y = squareLen; y < canvasHeight; y += squareLen) {
+        canvasContext.moveTo(0, y);
+        canvasContext.lineTo(canvasWidth, y);
     }
 
     canvasContext.strokeStyle = '#C0C0C0';
     canvasContext.stroke();
+}
+
+/* Add HTML to create snap grid for draggable elements */
+function createSnapGrid() {
+    var canvas = document.getElementById('canvas');
+    var canvasHeight = canvas.height;
+    var canvasWidth = canvas.width;
+
+    var vSnapDivs = [];
+    var hSnapDivs = [];
+
+    // Add vertical lines for snap grid
+    for (var i = 1; i < Math.floor(canvasWidth / squareLen); i++) {
+        vSnapDivs[i] = document.createElement('div');
+        $(vSnapDivs[i]).addClass('snap-div v-snap-div-' + (i+1));
+        $(vSnapDivs[i]).css({
+            height: (Math.floor(canvasHeight / squareLen) - 1) * squareLen,
+            left: canvas.offsetLeft + (squareLen / 2) + (i * squareLen) - 1 + 'px',
+            position: 'absolute',
+            top: canvas.offsetTop + (squareLen / 2),
+            width: '0px'
+        });
+        document.getElementById('editor-wrapper').appendChild(vSnapDivs[i]);
+    }
+
+    // Add horizontal lines for snap grid
+    for (var i = 1; i < Math.floor(canvasHeight / squareLen) - 1; i++) {
+        hSnapDivs[i] = document.createElement('div');
+        $(hSnapDivs[i]).addClass('snap-div h-snap-div-' + (i+1));
+        $(hSnapDivs[i]).css({
+            height: '0px',
+            left: canvas.offsetLeft + (squareLen / 2),
+            position: 'absolute',
+            top: canvas.offsetTop + (squareLen / 2) + (i * squareLen) - 1 + 'px',
+            width: Math.floor(canvasWidth / squareLen) * squareLen
+        });
+        document.getElementById('editor-wrapper').appendChild(hSnapDivs[i]);
+    }
+
+    console.log('snap grid created');
 }
 
 /* Resize canvas based on new window size */
@@ -41,6 +81,8 @@ function resizeCanvas() {
     canvas.style.height = windowHeight - 66 + 'px';
 
     drawGrid();
+
+    createSnapGrid();
 
     console.log('canvas resized');
 }
@@ -62,17 +104,21 @@ function ready() {
             startingOffsets[member.id] = { left: member.offsetLeft, top: member.offsetTop };
         });
 
-        // Variables for tracking coordinates of closest grid intersection for dropping member icon
+        // Variables for tracking coordinates of closest grid intersection for dropping member icons
         var dropX;
-        var dropy;
+        var dropY;
 
-        // Enable jQuery draggable functionality on each member icon DOM element
+        // Enable jQuery draggable functionality for each member icon DOM element
         members.forEach(function(member) {
             $(member).draggable({
-                // Constrained area allowed for dragging 
-                containment: document.body,
+                // Constrained area allowed for dragging
+                // [140, 56, 1366, 624]
+                containment: [canvas.getBoundingClientRect().left, canvas.getBoundingClientRect().top,
+                              $(window).width(),                   $(window).height() - 33],
                 // No auto-scroll when dragging
                 scroll: false,
+                // Snap to snap div's
+                snap: '.snap-div',
                 // Start callback function for when dragging starts
                 start: function(event) {
                     // Add being-dragged styling
@@ -86,13 +132,13 @@ function ready() {
                     var canvasContext = canvas.getContext('2d');
 
                     // X- and y-coordinates of cursor respective to the canvas
-                    var canvasX = event.clientX - canvas.offsetLeft;
-                    var canvasY = event.clientY - canvas.offsetTop;
+                    var canvasX = event.clientX - canvas.getBoundingClientRect().left;
+                    var canvasY = event.clientY - canvas.getBoundingClientRect().top;
 
                     // If the cursor is within the boundaries of the canvas
                     if ((canvasX >= 0 && canvasX <= canvasWidth) && (canvasY >= 0 && canvasY <= canvasHeight)) {
                         // Clears canvas to delete previously drawn indicator for closest grid intersection
-                        drawGrid();
+                        // drawGrid();
 
                         // Find grid intersection closest to cursor during dragging
 
@@ -109,10 +155,13 @@ function ready() {
                         fourCorners.push([modX * squareLen,       (modY + 1) * squareLen]);
                         fourCorners.push([(modX + 1) * squareLen, (modY + 1) * squareLen]);
 
+                        var currX;
+                        var currY;
+                        var currDist;
                         for (var i = 0; i < fourCorners.length; i++) {
-                            var currX = fourCorners[i][0];
-                            var currY = fourCorners[i][1];
-                            var currDist = Math.sqrt(Math.pow(canvasX - currX, 2) + Math.pow(canvasY - currY, 2));
+                            currX = fourCorners[i][0];
+                            currY = fourCorners[i][1];
+                            currDist = Math.sqrt(Math.pow(canvasX - currX, 2) + Math.pow(canvasY - currY, 2));
                             if (currDist < smallestDist) {
                                 smallestDist = currDist;
                                 closestX = currX;
@@ -121,12 +170,12 @@ function ready() {
                         }
 
                         // Draw a small grey circle at the determined closest grid intersection
-                        canvasContext.beginPath();
-                        canvasContext.arc(closestX, closestY, 10, 0, 2*Math.PI);
-                        canvasContext.strokeStyle = '#C0C0C0';
-                        canvasContext.stroke();
-                        canvasContext.fillStyle = '#C0C0C0';
-                        canvasContext.fill();
+                        // canvasContext.beginPath();
+                        // canvasContext.arc(closestX, closestY, 10, 0, 2*Math.PI);
+                        // canvasContext.strokeStyle = '#C0C0C0';
+                        // canvasContext.stroke();
+                        // canvasContext.fillStyle = '#C0C0C0';
+                        // canvasContext.fill();
 
                         // Track coordinates of closest grid intersection
                         dropX = closestX;
