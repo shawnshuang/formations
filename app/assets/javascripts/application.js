@@ -14,6 +14,7 @@
 //= require jquery.turbolinks
 //= require jquery_ujs
 //= require jquery-ui/draggable
+//= require jquery-ui/droppable
 //= require foundation
 //= require editor
 //= require turbolinks

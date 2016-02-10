@@ -1,10 +1,6 @@
 (function(window, document, $) {
-    // Document's client width
     var dClientWidth;
-    // Document's client height
     var dClientHeight;
-
-    // Variables regarding canvas
     var canvas;
     var canvasWidth;
     var canvasHeight;
@@ -15,7 +11,6 @@
 
     /* Draw grid lines on canvas */
     function drawGrid() {
-        // Clear canvas
         canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
 
         // Calculate the length of each grid square
@@ -33,7 +28,6 @@
             canvasContext.lineTo(canvasWidth, y);
         }
 
-        // Set stroke color and execute actual drawing
         canvasContext.strokeStyle = '#C0C0C0';
         canvasContext.stroke();
 
@@ -42,16 +36,16 @@
 
     /* Add HTML to create snap grid for draggable elements */
     function createSnapGrid() {
+        var eWrapper = document.getElementById('editor-wrapper');
+
         // Vertical snap div's
         var vSnapDivs = [];
         // Horizontal snap div's
         var hSnapDivs = [];
 
-        var eWrapper = document.getElementById('editor-wrapper');
-
         // Add vertical snap div's
         /* To Do: Make responsive */
-        for (var i = 1; i < Math.floor(canvasWidth / squareLen); i++) {
+        for (var i = 1; i < Math.floor(canvasWidth / squareLen); i += 1) {
             vSnapDivs[i] = document.createElement('div');
             vSnapDivs[i].className += 'snap-div v-snap-div-' + (i+1);
                 // Previously: $(vSnapDivs[i]).addClass('snap-div v-snap-div-' + (i+1));
@@ -74,7 +68,7 @@
 
         // Add horizontal snap div's
         /* To Do: Make responsive */
-        for (var j = 1; j < Math.floor(canvasHeight / squareLen) - 1; j++) {
+        for (var j = 1; j < Math.floor(canvasHeight / squareLen) - 1; j += 1) {
             hSnapDivs[j] = document.createElement('div');
             hSnapDivs[j].className += 'snap-div h-snap-div-' + (j+1);
                 // Previously: $(hSnapDivs[j]).addClass('snap-div h-snap-div-' + (j+1));
@@ -124,12 +118,15 @@
                 // Previously: $(window).width();
             dClientHeight = document.documentElement.clientHeight;
                 // Previously: $(window).height();
-
             canvas = document.getElementById('canvas');
             canvasContext = canvas.getContext('2d');
 
             // Set up and draw canvas when editor page first loads
             resizeCanvas();
+
+            // X- and y-coordinates of cursor respective to the canvas
+            var canvasX;
+            var canvasY;
 
             // Variables for tracking coordinates of closest grid intersection for dropping member icons
             var dropX;
@@ -150,47 +147,53 @@
                 $(member).draggable({
                     // Constrained area allowed for dragging
                     containment: [canvas.getBoundingClientRect().left, canvas.getBoundingClientRect().top,
-                                  dClientWidth,                   dClientHeight - 33],
+                                  dClientWidth,                        dClientHeight - 33],
                         // Preivously: $(window).width(), $(window).height()
                     // No auto-scroll when dragging
                     scroll: false,
                     // Snap to snap div's
                     snap: '.snap-div',
-                    // Start callback function for when dragging starts
+                    // Ccallback function for when dragging starts
                     start: function(event) {
                         // Add being-dragged styling
                         member.className += ' ' + 'being-dragged';
                     },
-                    // Drag callback function for during dragging
+                    // Callback function for whenever element is dragged
                     drag: function(event) {
-                        // X- and y-coordinates of cursor respective to the canvas
-                        var canvasX = event.clientX - canvas.getBoundingClientRect().left;
-                        var canvasY = event.clientY - canvas.getBoundingClientRect().top;
+                        /* Variables for finding the grid intersection closest to cursor during dragging */
+
+                        // The four possible grid intersections closest to the cursor at any point
+                        var fourCorners = [];
+                        // X-coordinate of currently examined 'corner'
+                        var currX;
+                        // Y-coordinate of currently examined 'corner'
+                        var currY;
+                        // Computed distance between cursor and currently examined 'corner'
+                        var currDist;
+                        // X-coorindate of grid intersection closest to cursor
+                        var closestX;
+                        // Y-coorindate of grid intersection closest to cursor
+                        var closestY;
+                        // Computed distance between cursor and closest grid intersection
+                        var smallestDist = Number.MAX_VALUE;
+
+                        canvasX = event.clientX - canvas.getBoundingClientRect().left;
+                        canvasY = event.clientY - canvas.getBoundingClientRect().top;
 
                         // If the cursor is within the boundaries of the canvas
                         if (canvasX >= 0 && canvasX <= canvasWidth && canvasY >= 0 && canvasY <= canvasHeight) {
                             // Find grid intersection closest to cursor during dragging
 
-                            var closestX;
-                            var closestY;
-                            var fourCorners = [];
-                            var smallestDist = Number.MAX_VALUE;
-
                             var modX = Math.floor(canvasX / squareLen);
                             var modY = Math.floor(canvasY / squareLen);
 
-                            // The four grid intersections closest to the cursor at any point
                             fourCorners.push([modX * squareLen,       modY * squareLen]);
                             fourCorners.push([(modX + 1) * squareLen, modY * squareLen]);
                             fourCorners.push([modX * squareLen,       (modY + 1) * squareLen]);
                             fourCorners.push([(modX + 1) * squareLen, (modY + 1) * squareLen]);
 
-                            var currX;
-                            var currY;
-                            var currDist;
-
                             // Calculate distance between cursor and each grid intersection
-                            for (var i = 0; i < fourCorners.length; i++) {
+                            for (var i = 0; i < fourCorners.length; i += 1) {
                                 currX = fourCorners[i][0];
                                 currY = fourCorners[i][1];
                                 currDist = Math.sqrt(Math.pow(canvasX - currX, 2) + Math.pow(canvasY - currY, 2));
@@ -207,20 +210,43 @@
                             dropY = closestY;
                         }
                     },
-                    // Stop callback function for when dragging stops
+                    // Callback function for when dragging stops
                     stop: function(event) {
                         // Remove being-dragged styling
                         member.className = 'member-icon';
 
-                        // Drop member icon to closest grid intersection
-                        event.target.style.left = dropX + canvas.offsetLeft - startingOffsets[event.target.id].left - 15 + 'px';
-                        event.target.style.top = dropY + canvas.offsetTop - startingOffsets[event.target.id].top - 15 + 'px';
-                            // Previously:
-                            // $(event.target).css('left', dropX + canvas.offsetLeft - startingOffsets[event.target.id].left - 15);
-                            // $(event.target).css('top', dropY + canvas.offsetTop - startingOffsets[event.target.id].top - 15);
+                        canvasX = event.clientX - canvas.getBoundingClientRect().left;
+                        canvasY = event.clientY - canvas.getBoundingClientRect().top;
+
+                        // If the cursor is within the boundaries of the canvas
+                        if (canvasX >= 0 && canvasX <= canvasWidth && canvasY >= 0 && canvasY <= canvasHeight) {
+                            // Drop member icon to closest grid intersection
+                            event.target.style.left = dropX + canvas.offsetLeft - startingOffsets[event.target.id].left - 15 + 'px';
+                            event.target.style.top = dropY + canvas.offsetTop - startingOffsets[event.target.id].top - 15 + 'px';
+                                // Previously:
+                                // $(event.target).css('left', dropX + canvas.offsetLeft - startingOffsets[event.target.id].left - 15);
+                                // $(event.target).css('top', dropY + canvas.offsetTop - startingOffsets[event.target.id].top - 15);
+                        }
+                    },
+                    // Reverts member icon to original position if not dropped on canvas.
+                    // Based off of: http://stackoverflow.com/questions/5735270/revert-a-
+                    // jquery-draggable-object-back-to-its-original-container-on-out-event-of
+                    revert: function(event) {
+                        // Event is droppable element when draggable is dropped on droppable.
+                        // Else, event is false. jQuery reverts the draggable if the revert
+                        // callback function returns true.
+
+                        $(this).data('uiDraggable').originalPosition = {
+                            left: 0,
+                            top: 0
+                        };
+                        return !event;
                     }
                 });
             });
+
+            // Enable jQuery droppable functionality for canvas
+            $(canvas).droppable();
         }
     }
 
