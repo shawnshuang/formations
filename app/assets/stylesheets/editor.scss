@@ -38,7 +38,7 @@ html {
         background-color: #D66860;
         float: left;
         margin: 0 10px 0 0;
-        width: 10%;
+        width: 13%;
     }
     #canvas {
         background-color: #D3DBDE;
@@ -80,7 +80,7 @@ html {
         text-align: center;
         width: 30px;
         .member-icon {
-            -webkit-transition: -webkit-transform 0.2s linear 0s, opacity 0.2s linear 0s;
+            -webkit-transition: opacity 0.4s linear 0s;
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
@@ -89,14 +89,13 @@ html {
             border-style: solid;
             border-width: 2px;
             height: 32px;
+            position: absolute;
             width: 32px;
             &:hover {
                 cursor: -webkit-grab;
-                cursor: grab;
             }
             &:active {
                 cursor: -webkit-grabbing;
-                cursor: grabbing;
             }
         }
         .member-name {
@@ -104,6 +103,7 @@ html {
             font-size: 0.8em;
             margin-left: -100%;
             margin-right: -100%;
+            margin-top: 31px;
             text-align: center;
         }
         #chrystina {
@@ -150,8 +150,5 @@ html {
 
 /* Styling for drag and drop interactions */
 .being-dragged {
-    /* -webkit-transform: scale(1.5, 1.5); */
-    /* -webkit-transition: -webkit-transform 0.2s linear 0s, opacity 0.2s linear 0s; */
-    -webkit-transition: opacity 0.2s linear 0s;
     opacity: 0.2;
 }
