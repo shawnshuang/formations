@@ -13,7 +13,7 @@ html {
     .top-bar {
         background-color: #556170;
         padding: 0px 10px 0px 10px;
-        .menu-text {
+        #logo-text {
             color: white;
             font-weight: bold;
             font-size: 1.5em;
@@ -39,6 +39,44 @@ html {
         float: left;
         margin: 0 10px 0 0;
         width: 13%;
+        #new-formation-btn {
+            border-color: white;
+            border-radius: 10px;
+            border-style: solid;
+            border-width: 2px;
+            color: white;
+            font-size: 0.8em;
+            font-weight: bold;
+            left: 50%;
+            margin-bottom: 5px;
+            margin-top: 10px;
+            padding: 8px 25px 8px 25px;
+            position: relative;
+            transform: translateX(-50%);
+            transition: all .2s linear 0s;
+            &:hover {
+                background-color: white;
+                color: #D66860;
+                font-weight: bold;
+            }
+        }
+        .preview-slide-container{
+            .slide-numbering {
+                bottom: 70px;
+                color: #404040;
+                font-weight: bold;
+                left: 10px;
+                position: relative;
+            }
+            .preview-slide{
+                background-color: white;
+                border-color: #707070;
+                border-style: solid;
+                border-width: 2px;
+                margin-left: 15px;
+                margin-top: 6px;
+            }
+        }
     }
     #canvas {
         background-color: #D3DBDE;
@@ -70,7 +108,7 @@ html {
    height: 0; 
    clear: both;
 }
-.members-container {
+#members-container {
     margin: 15px auto;
     width: 90%;
     .indiv-member-container {
