@@ -59,6 +59,9 @@ html {
                 color: #D66860;
                 font-weight: bold;
             }
+            &:focus {
+                outline: 0;
+            }
         }
         .preview-slide-container{
             .slide-numbering {
