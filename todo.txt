@@ -1,0 +1,40 @@
+---To Do---
+  - scrollable filmstrip
+
+  - implement deleting formation
+
+  - multi-select / multi-select with shift
+
+  - making sure an icon can't be dropped on another icon
+
+  - displaying different profile directions
+
+  - adding new member ... (watch out for length of name)
+  - scrollable members panel
+
+  ...
+
+  - fix positioning within members panel when in names view
+  - work on color of member icons in names view
+
+---Figure out implementation details---
+  - traffic / shortest distance / display traffic routes / to see if the
+    traffic would work out
+  - formation suggestions / templates / suggestions based on given number of
+    people / draw examples from existing sets (e.g. Body Rock)
+  - way to share blocking & notes with dancers
+
+---See if users would want---
+  - highlighting people with different colors
+  - fix adding new formations to copy placements of currently selected formation
+
+---User Interviews---
+Christian
+Michael
+Robert
+Lloyd
+Daniel
+
+Sausages - Gordon, ...
+FP - Duncan, ...
+FTL...

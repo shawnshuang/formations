@@ -15,6 +15,7 @@
 //= require jquery_ujs
 //= require jquery-ui/draggable
 //= require jquery-ui/droppable
+//= require jquery.custom-scrollbar.min
 //= require editor
 //= require turbolinks
 

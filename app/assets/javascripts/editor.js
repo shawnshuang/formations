@@ -1,15 +1,3 @@
-/* ---To Do List---
- * - implement grid system for editor page
- * - scrollable filmstrip
- *
- * - add new member (picture?)
- * - scrollable members panel
- * - new member & between formations
- *
- *
- * - clean up CSS
- */
-
 (function(window, document, $) {
     /*************
      * Variables *
@@ -29,6 +17,8 @@
     var memberIcons;
     // Initial left and top offsets for member icons
     var startingOffsets = {};
+    // Boolean toggle to track if member icons are in photos view or names view
+    var isPhotoView = true;
     // List of all Formations
     var formations = [];
     // Current active Formation
@@ -106,19 +96,32 @@
         // Clear the canvas to avoid drawing over previous drawing
         canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Calculate the length of each grid square
-        squareLen = Math.round(canvas.width / 30);
+        // Calculate the length of each grid square based on the width of member icons
+        var memberIcon = document.getElementsByClassName('member-icon')[0];
+        squareLen = memberIcon.offsetWidth;
 
         // Setup drawing paths for vertical lines
         for (var x = squareLen; x < canvas.width; x += squareLen) {
-            canvasContext.moveTo(x, 0);
-            canvasContext.lineTo(x, canvas.height);
+            // Avoid drawing on edges of canvas near toggle button
+            if (x === squareLen * 2) {
+                canvasContext.moveTo(x, squareLen);
+                canvasContext.lineTo(x, canvas.height);    
+            } else {
+                canvasContext.moveTo(x, 0);
+                canvasContext.lineTo(x, canvas.height);
+            }
         }
 
         // Setup drawing paths for horizontal lines
         for (var y = squareLen; y < canvas.height; y += squareLen) {
-            canvasContext.moveTo(0, y);
-            canvasContext.lineTo(canvas.width, y);
+            // Avoid drawing on edges of canvas near toggle button
+            if (y === squareLen) {
+                canvasContext.moveTo(squareLen * 2, y);
+                canvasContext.lineTo(canvas.width, y);
+            } else {
+                canvasContext.moveTo(0, y);
+                canvasContext.lineTo(canvas.width, y);
+            }
         }
 
         // Set stroke color
@@ -184,21 +187,86 @@
             memberIcons[i].style.top = repositionTop + 'px';
 
             var membersPanel = document.getElementById('members-panel');
+            var memberName;
 
             // If the member icon is outside of the main canvas, show its name
             if (repositionLeft > membersPanel.getBoundingClientRect().left) {
-                var memberName = $(memberIcons[i]).siblings()[0];
-                memberName.style.display = '';
-                memberName.style.visibility = 'visible';
+                // If member icons are in photos view
+                if (isPhotoView) {
+                    memberName = $(memberIcons[i]).siblings()[0];
+                    $(memberName).show();
+                }
             // If the member icon is inside the main canvas, hide its name
             } else {
-                var memberName = $(memberIcons[i]).siblings()[0];
-                memberName.style.display = 'none';
-                memberName.style.visibility = 'hidden';
+                memberName = $(memberIcons[i]).siblings()[0];
+                $(memberName).hide();
             }
         }
+    }
 
-        // To Do: show member names if member not within main canvas
+    /* Add new formation object and preview slide */
+    function addFormation() {
+        /* Add new formation object */
+
+        // Construct new Formation
+        var newFormation = new Formation($.extend(true, {}, startingOffsets));
+        // Append new Formation to list of all Formations
+        formations.push(newFormation);
+        // Set current Formation to the new Formation
+        currFormation = newFormation;
+
+        /* Add new formation preview slide */
+
+        // Create HTML numbering of preview slide
+        var numbering = document.createElement('span');
+        numbering.className += 'slide-numbering';
+        numbering.innerHTML = formations.length;
+
+        // Create HTML of preview slide canvas
+        var newSlideCanvas = document.createElement('canvas');
+        newSlideCanvas.className += 'preview-slide';
+        newSlideCanvas.width = Math.floor((canvas.width / canvas.height) * 85);
+        newSlideCanvas.height = 85;
+        newSlideCanvas.style.width = newSlideCanvas.width + 'px';
+        newSlideCanvas.style.height = newSlideCanvas.height + 'px';
+
+        // Create HTML preview slide container
+        var newWrapper = document.createElement('div');
+        newWrapper.className += 'preview-slide-container';
+
+        // Append numbering and preview slide canvas as children of container
+        newWrapper.appendChild(numbering);
+        newWrapper.appendChild(newSlideCanvas);
+
+        // Highlight clicked Formation and display its placement of member icons
+        newWrapper.addEventListener('click', viewFormation, false);
+
+        // Add preview slide container to filmstrip
+        var filmstrip = document.getElementById('filmstrip');
+        filmstrip.appendChild(newWrapper);
+
+        // If there is more than one Formation
+        if (typeof currSlideContainer !== 'undefined') {
+            // Change the current preview slide's styling back to normal
+            currSlideContainer.style.backgroundColor = '#D66860';
+            currSlideCanvas.style.borderColor = '#707070';
+        }
+
+        // Append new preview slide container to list of all containers
+        slideContainers.push(newWrapper);
+        // Set current slide container to the new container
+        currSlideContainer = newWrapper;
+        // Set current slide canvas to the new preview slide canvas
+        currSlideCanvas = newSlideCanvas;
+        // Set the current slide context to that of the current slide canvas
+        currSlideContext = newSlideCanvas.getContext('2d');
+
+        // Highlight the new slide as the currently active one
+        currSlideContainer.style.backgroundColor = '#E6A39E';
+        currSlideCanvas.style.borderColor = 'black';
+
+        // Reposition member icons based on new current Formation
+        repositionIcons();
     }
 
     /* Highlight clicked Formation and display its placement of member icons */
@@ -266,66 +334,44 @@
         repositionIcons();
     }
 
-    /* Add new formation object and preview slide */
-    function addFormation() {
-        /* Add new formation object */
+    /* Change display of member icons between photos and names */
+    function toggleIconView() {
+        // True if checkbox is checked. Note: Click event listener is called before checkbox is checked.
+        var checked = document.getElementById('toggle').checked;
 
-        // Construct new Formation
-        var newFormation = new Formation($.extend(true, {}, startingOffsets));
-        // Append new Formation to list of all Formations
-        formations.push(newFormation);
-        // Set current Formation to the new Formation
-        currFormation = newFormation;
+        var membersPanel = document.getElementById('members-panel');
+        var memberName;
 
-        /* Add new formation preview slide */
+        // Photos view
+        if (checked) {
+            // Member icons are in photos view
+            isPhotoView = true;
 
-        // Create HTML numbering of preview slide
-        var numbering = document.createElement('span');
-        numbering.className += 'slide-numbering';
-        numbering.innerHTML = formations.length;
+            memberIcons.forEach(function(member){
+                // Display member icons as photos
+                $(member).removeClass('names');
 
-        // Create HTML of preview slide canvas
-        var newSlideCanvas = document.createElement('canvas');
-        newSlideCanvas.className += 'preview-slide';
-        newSlideCanvas.width = Math.floor((canvas.width / canvas.height) * 85);
-        newSlideCanvas.height = 85;
-        newSlideCanvas.style.width = newSlideCanvas.width + 'px';
-        newSlideCanvas.style.height = newSlideCanvas.height + 'px';
+                // If the member icon is outside of the main canvas
+                if (member.offsetLeft > membersPanel.getBoundingClientRect().left) {
+                    // Show member name below icon
+                    memberName = $(member).siblings()[0];
+                    $(memberName).show('400');
+                }
+            });
+        // Names view
+        } else {
+            // Member icons are in names view
+            isPhotoView = false;
 
-        // Create HTML preview slide container
-        var newWrapper = document.createElement('div');
-        newWrapper.className += 'preview-slide-container';
+            memberIcons.forEach(function(member) {
+                // Display member icons as names
+                $(member).addClass('names');
 
-        // Append numbering and preview slide canvas as children of container
-        newWrapper.appendChild(numbering);
-        newWrapper.appendChild(newSlideCanvas);
-
-        // Highlight clicked Formation and display its placement of member icons
-        newWrapper.addEventListener('click', viewFormation, false);
-
-        // Add preview slide container to filmstrip
-        var filmstrip = document.getElementById('filmstrip');
-        filmstrip.appendChild(newWrapper);
-
-        // If there is more than one Formation
-        if (typeof currSlideContainer !== 'undefined') {
-            // Change the current preview slide's styling back to normal
-            currSlideContainer.style.backgroundColor = '#D66860';
-            currSlideCanvas.style.borderColor = '#707070';
+                // Hide member name below icon to avoid repetitive display
+                memberName = $(member).siblings()[0];
+                $(memberName).hide('400');
+            });
         }
-
-        // Append new preview slide container to list of all containers
-        slideContainers.push(newWrapper);
-        // Set current slide container to the new container
-        currSlideContainer = newWrapper;
-        // Set current slide canvas to the new preview slide canvas
-        currSlideCanvas = newSlideCanvas;
-        // Set the current slide context to that of the current slide canvas
-        currSlideContext = newSlideCanvas.getContext('2d');
-
-        // Highlight the new slide as the currently active one
-        currSlideContainer.style.backgroundColor = '#E6A39E';
-        currSlideCanvas.style.borderColor = 'black';
     }
 
     /* Redraw the current Formation's preview slide canvas */
@@ -363,7 +409,7 @@
                 // Callback function for when dragging starts
                 start: function(event) {
                     // Add being-dragged styling
-                    member.className += ' ' + 'being-dragged';
+                    $(member).addClass('being-dragged');
                 },
                 // Callback function for whenever element is dragged
                 drag: function(event) {
@@ -372,7 +418,7 @@
                 // Callback function for when dragged element is dropped
                 stop: function(event) {
                     // Remove being-dragged styling
-                    member.className = 'member-icon';
+                    $(member).removeClass('being-dragged');
 
                     // Members panel
                     var membersPanel = document.getElementById('members-panel');
@@ -385,9 +431,12 @@
 
                     // If the dragged member is dropped to the right of the members panel's left offset
                     if (event.clientX > membersPanelLeft) {
-                        // Show member icon's name
-                        memberName = $(event.target).siblings()[0];
-                        $(memberName).show('100');
+                        // If member icons are in photos view
+                        if (isPhotoView) {
+                            // Show member icon's name
+                            memberName = $(event.target).siblings()[0];
+                            $(memberName).show('400');
+                        }
 
                         // Update left and top offsets of dropped member
                         newOffsets[event.target.id] = {
@@ -407,7 +456,7 @@
 
                         // Hide member icon's name
                         memberName = $(event.target).siblings()[0];
-                        $(memberName).hide('200');
+                        $(memberName).hide('400');
 
                         // Update left and top offsets of dropped member
                         newOffsets[event.target.id] = {
@@ -454,9 +503,19 @@
             // Set up and draw canvas when editor page first loads
             resizeCanvas();
 
-            // Add formation when new formation button is clicked
-            var newFormationBtn = document.getElementById('new-formation-btn');
-            newFormationBtn.addEventListener('click', addFormation, false);
+            // Style toggle button based on length of grid squares
+            var toggleBtn = document.getElementById('toggle-btn');
+            toggleBtn.style.height = squareLen - 4 + 'px';
+            toggleBtn.style.width = squareLen * 2 - 4 + 'px';
+            toggleBtn.style.lineHeight = squareLen - 4 + 'px';
+            toggleBtn.style.marginLeft = 7 + 'px';
+            toggleBtn.style.marginTop = 7 + 'px';
+
+            var toggleContainer = document.getElementById('toggle-container');
+            toggleContainer.style.left = canvas.offsetLeft - 10 + 'px';
+            toggleContainer.style.top = canvas.offsetTop - 10 + 'px';
+            toggleContainer.style.height = squareLen + 10 + 'px';
+            toggleContainer.style.width = squareLen * 2 + 10 + 'px';
 
             // Create array of member icons
             memberIcons = [].slice.call(document.getElementsByClassName('member-icon'));
@@ -466,6 +525,13 @@
                 startingOffsets[member.id] = { left: member.offsetLeft, 
                                                top:  member.offsetTop };
             });
+
+            // Add formation when new formation button is clicked
+            var newFormationBtn = document.getElementById('new-formation-btn');
+            newFormationBtn.addEventListener('click', addFormation, false);
+
+            // Toggle member icon view when toggle button is clicked
+            toggleBtn.addEventListener('click', toggleIconView, false);
 
             // Set up first formation object and preview slide
             addFormation();

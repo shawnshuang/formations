@@ -1,4 +1,5 @@
 html {
+    -webkit-user-select: none;
     min-height: 100%;
     overflow-x: hidden;
     width: 100%;
@@ -9,6 +10,7 @@ html {
 }
 
 /* Nav bar styling specific to the editor page */
+
 .editor {
     .top-bar {
         background-color: #556170;
@@ -28,110 +30,160 @@ html {
     }
 }
 
-/* Styling for editor canvas & tool panels */
+/* Styling for main canvas */
+
 #editor-wrapper {
     display: flex;
     flex-flow: row;
     min-height: calc(100% - 46px);
     position: relative;
-    #filmstrip {
-        background-color: #D66860;
-        float: left;
-        margin: 0 10px 0 0;
-        width: 13%;
-        #new-formation-btn {
-            border-color: white;
-            border-radius: 10px;
-            border-style: solid;
-            border-width: 2px;
-            color: white;
-            font-size: 0.8em;
-            font-weight: bold;
-            left: 50%;
-            margin-bottom: 5px;
-            margin-top: 10px;
-            padding: 8px 25px 8px 25px;
-            position: relative;
-            transform: translateX(-50%);
-            transition: all .2s linear 0s;
-            &:hover {
-                background-color: white;
-                color: #D66860;
-                font-weight: bold;
-            }
-            &:focus {
-                outline: 0;
-            }
-        }
-        .preview-slide-container{
-            .slide-numbering {
-                bottom: 70px;
-                color: #404040;
-                font-weight: bold;
-                left: 10px;
-                position: relative;
-            }
-            .preview-slide{
-                background-color: white;
-                border-color: #707070;
-                border-style: solid;
-                border-width: 2px;
-                margin-left: 15px;
-                margin-top: 6px;
-            }
-        }
-    }
     #canvas {
         background-color: #D3DBDE;
         float: left;
         margin: 10px 0 10px 0;
     }
-    #members-panel {
-        background-color: #D66860;
-        float: left;
-        margin: 0 0 0 10px;
-        width: 20%;
-        #members-panel-title {
-            border-bottom-color: white;
-            border-bottom-style: solid;
-            border-bottom-width: 2px;
-            color: white;
+}
+
+/* Styling for filmstrip */
+
+#filmstrip {
+    background-color: #D66860;
+    float: left;
+    margin: 0 10px 0 0;
+    width: 13%;
+    #new-formation-btn {
+        border-color: white;
+        border-radius: 10px;
+        border-style: solid;
+        border-width: 2px;
+        color: white;
+        font-size: 0.8em;
+        font-weight: bold;
+        left: 50%;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        padding: 8px 25px 8px 25px;
+        position: relative;
+        transform: translateX(-50%);
+        transition: all .2s linear 0s;
+        &:hover {
+            background-color: white;
+            color: #D66860;
             font-weight: bold;
-            margin: 0px 15px 0px 15px;
-            padding: 10px 0px 10px 0px;
-            text-align: center;
+        }
+        &:focus {
+            outline: 0;
+        }
+    }
+    .preview-slide-container{
+        .slide-numbering {
+            bottom: 70px;
+            color: #404040;
+            font-weight: bold;
+            left: 10px;
+            position: relative;
+        }
+        .preview-slide{
+            background-color: white;
+            border-color: #707070;
+            border-style: solid;
+            border-width: 2px;
+            margin-left: 15px;
+            margin-top: 6px;
         }
     }
 }
 
-/* Styling for members in members panel */
+/* Styling for member icon toggle button
+ * Based off of: http://codepen.io/mallendeo/pen/eLIiG */
+#toggle-container {
+    background-color: white;
+    position: absolute;
+    .member-icon-toggle {
+        display: none;
+    }
+    #toggle-btn {
+        -webkit-transition: left .2s ease, background .2s ease;
+        background-color: #96A3B3;
+        color: #FFFFFF;
+        cursor: pointer;
+        display: block;
+        font-weight: bold;
+        overflow: hidden;
+        position: relative;
+        &:before, &:after {
+            -webkit-transition: left .2s ease, background .2s ease;
+            position: absolute;
+            text-align: center;
+            width: 100%;
+        }
+        &:before {
+            content: 'Photos';
+            left: 0;
+        }
+        &:after {
+            content: 'Names';
+            left: 100%;
+        }
+    }
+    .member-icon-toggle:checked + #toggle-btn {
+        background-color: #E6A39E;
+    }
+    .member-icon-toggle:checked + #toggle-btn:before {
+        left: -100%;
+    }
+    .member-icon-toggle:checked + #toggle-btn:after {
+        left: 0;
+    }
+}
+
+/* Styling for members panel */
+
 .clearfix:after {
    content: " ";
    display: block; 
    height: 0; 
    clear: both;
 }
+
+#members-panel {
+    background-color: #D66860;
+    float: left;
+    margin: 0 0 0 10px;
+    width: 20%;
+    #members-panel-title {
+        border-bottom-color: white;
+        border-bottom-style: solid;
+        border-bottom-width: 2px;
+        color: white;
+        font-weight: bold;
+        margin: 0px 15px 0px 15px;
+        padding: 10px 0px 10px 0px;
+        text-align: center;
+    }
+}
+
 #members-container {
-    margin: 15px auto;
-    width: 90%;
+    margin: 15px 0px 0px 15px;
     .indiv-member-container {
+        -webkit-transition: height 0.2s ease;
         float: left;
         height: 60px;
-        margin: 0px 14px 0px 14px;
-        text-align: center;
-        width: 30px;
+        margin: 0px 9px 0px 9px;
+        width: 40px;
         .member-icon {
             -webkit-transition: opacity 0.4s linear 0s;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
+            background-color: #96A3B3;
             border-color: #556170;
             border-radius: 50%;
             border-style: solid;
             border-width: 2px;
-            height: 32px;
+            display: block;
+            height: 40px;
+            overflow: hidden;
             position: absolute;
-            width: 32px;
+            width: 40px;
+            z-index: 1;
             &:hover {
                 cursor: -webkit-grab;
             }
@@ -141,55 +193,127 @@ html {
         }
         .member-name {
             color: white;
-            font-size: 0.8em;
+            font-size: 0.7em;
             margin-left: -100%;
             margin-right: -100%;
-            margin-top: 31px;
+            margin-top: 40px;
             text-align: center;
         }
-        #chrystina {
+        #chrystina:before {
             background-image: image-url("chrystina.jpg");
         }
-        #gordon {
+        #chrystina:after {
+            content: 'C. Yu';
+        }
+        #gordon:before {
             background-image: image-url("gordon.jpg");
         }
-        #jordan {
+        #gordon:after {
+            content: 'Gordon';
+        }
+        #jordan:before {
             background-image: image-url("jordan.jpg");
         }
-        #june {
+        #jordan:after {
+            content: 'Jordan';
+        }
+        #june:before {
             background-image: image-url("june.jpg");
         }
-        #kathy {
+        #june:after {
+            content: 'June';
+        }
+        #kathy:before {
             background-image: image-url("kathy.jpg");
         }
-        #kelly {
+        #kathy:after {
+            content: 'Kathy';
+        }
+        #kelly:before {
             background-image: image-url("kelly.jpg");
         }
-        #mel {
+        #kelly:after {
+            content: 'Kelly';
+        }
+        #mel:before {
             background-image: image-url("mel.jpg");
         }
-        #michael {
+        #mel:after {
+            content: 'Mel';
+        }
+        #michael:before {
             background-image: image-url("michael.jpg");
         }
-        #mindy {
+        #michael:after {
+            content: 'Michael';
+        }
+        #mindy:before {
             background-image: image-url("mindy.jpg");
         }
-        #paul {
+        #mindy:after {
+            content: 'Mindy';
+        }
+        #paul:before {
             background-image: image-url("paul.jpg");
         }
-        #robert {
+        #paul:after {
+            content: 'Paul';
+        }
+        #robert:before {
             background-image: image-url("robert.jpg");
         }
-        #serena {
+        #robert:after {
+            content: 'Robert';
+        }
+        #serena:before {
             background-image: image-url("serena.jpg");
         }
-        #shuang {
+        #serena:after {
+            content: 'Serena';
+        }
+        #shuang:before {
             background-image: image-url("shuang.jpg");
+        }
+        #shuang:after {
+            content: 'Shuang';
         }
     }
 }
 
-/* Styling for drag and drop interactions */
+.member-icon:before {
+    -webkit-transition: left 0.2s ease;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    content: '';
+    height: 40px;
+    left: 0px;
+    position: absolute;
+    width: 100%;
+}
+
+.member-icon:after {
+    -webkit-transition: left 0.2s ease;
+    background-color: #E6A39E;
+    color: white;
+    font-size: 0.65em;
+    left: 100%;
+    line-height: 36px;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+}
+
+.names:before {
+    left: -100%;
+}
+
+.names:after {
+    left: 0px;
+}
+
+/* Styling for drag and drop interaction */
+
 .being-dragged {
     opacity: 0.2;
 }
