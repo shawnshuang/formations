@@ -11,8 +11,10 @@
  * file per style scope.
  *
  *= require jquery-ui/draggable
- *= require_tree .
- *= require_self
+ *= require _settings
+ *= require foundation_and_overrides
+ *= require home
+ *= require editor
  */
 
 

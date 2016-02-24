@@ -241,9 +241,9 @@
         // Highlight clicked Formation and display its placement of member icons
         newWrapper.addEventListener('click', viewFormation, false);
 
-        // Add preview slide container to filmstrip
-        var filmstrip = document.getElementById('filmstrip');
-        filmstrip.appendChild(newWrapper);
+        // Add preview slide container to formations container
+        var formationsContainer = document.getElementById('formations-container');
+        formationsContainer.appendChild(newWrapper);
 
         // If there is more than one Formation
         if (typeof currSlideContainer !== 'undefined') {
@@ -529,6 +529,15 @@
             // Add formation when new formation button is clicked
             var newFormationBtn = document.getElementById('new-formation-btn');
             newFormationBtn.addEventListener('click', addFormation, false);
+
+            // Add scroll functionality to filmstrip
+            var formationsContainer = document.getElementById('formations-container');
+            var membersPanel = document.getElementById('members-panel');
+            $(formationsContainer).slimScroll({
+                height: membersPanel.offsetHeight - $(newFormationBtn).outerHeight(true) + 'px',
+                size: '4px',
+                railVisible: true
+            });
 
             // Toggle member icon view when toggle button is clicked
             toggleBtn.addEventListener('click', toggleIconView, false);

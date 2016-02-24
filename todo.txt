@@ -1,5 +1,5 @@
 ---To Do---
-  - scrollable filmstrip
+  - fix filmstrip spacing with 2 digit numbers
 
   - implement deleting formation
 
