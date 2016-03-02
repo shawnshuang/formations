@@ -1,5 +1,6 @@
 ---To Do---
-  - implement deleting formation when delete button clicked
+  - formationsContainer v. formationContainer
+  - changing coloring when highlighting canvas border
   - implement animation for deleting formation
 
   - implement jumping scroll bar when new formation added
@@ -50,6 +51,7 @@ FTL...
 
 ---Other---
 + https://www.toptal.com/javascript/10-most-common-javascript-mistakes
+   - JS memory leaks
 - UI colors (design black & white first)
 - responsiveness (design for mobile first)
 - error handling

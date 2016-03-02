@@ -1,4 +1,6 @@
 (function(window, document, $) {
+    'use strict';
+
     /*************
      * Variables *
      *************/
@@ -7,18 +9,27 @@
     var docClientWidth;
     // Document's client height
     var docClientHeight;
+
     // Main canvas
     var canvas;
     // HTML canvas context for main canvas
     var canvasContext;
     // Length of grid square in main canvas
     var squareLen;
+
     // Member icon HTML elements
     var memberIcons;
     // Initial left and top offsets for member icons
     var startingOffsets = {};
+
+    // HTML container that holds all individual Formation containers
+    var formationsContainer;
+    // HTML element that holds all of the member icons
+    var membersPanel;
+
     // Boolean flag for tracking if member icons are in photos view or names view
     var isPhotoView = true;
+
     // List of all Formations
     var formations = [];
     // Current active Formation
@@ -98,8 +109,7 @@
         canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 
         // Calculate the length of each grid square based on the width of member icons
-        var memberIcon = document.getElementsByClassName('member-icon')[0];
-        squareLen = memberIcon.offsetWidth;
+        squareLen = memberIcons[0].offsetWidth;
 
         // Setup drawing paths for vertical lines
         for (var x = squareLen; x < canvas.width; x += squareLen) {
@@ -187,7 +197,6 @@
             memberIcons[i].style.left = repositionLeft + 'px';
             memberIcons[i].style.top = repositionTop + 'px';
 
-            var membersPanel = document.getElementById('members-panel');
             var memberName;
 
             // If the member icon is outside of the main canvas
@@ -345,14 +354,13 @@
         // Highlight container and display its placement of member icons when Formation is clicked
         newWrapper.addEventListener('click', viewFormation, false);
 
-        // Delete formation object and preview slide when its delete button is clicked
-        // deleteBtn.addEventListener('click', function(event) {
-        //     event.stopPropagation();
-        //     deleteFormation();
-        // }, false);
+        // Delete Formation object and preview canvas when its delete button is clicked
+        deleteBtn.addEventListener('click', function(event) {
+            event.stopPropagation();
+            deleteFormation(event);
+        }, false);
 
-        // Add fully constructed Formation container to document
-        var formationsContainer = document.getElementById('formations-container');
+        // Add fully constructed Formation container to the DOM
         formationsContainer.appendChild(newWrapper);
 
         // If there is more than one Formation
@@ -379,13 +387,69 @@
         repositionIcons();
     }
 
+    /* Delete Formation */
+    function deleteFormation(event) {
+        /* Delete Formation object */
+
+        // Obtain index of Formation to delete
+        var indexToDelete = formationContainers.indexOf(event.target.parentElement);
+
+        // If deleted Formation was the active one, need to set new current Formation
+        if (event.target.parentElement === currContainer) {
+            // Set the Formation before as the new active one
+            currFormation = formations[indexToDelete - 1];
+
+            // Set the new current Formation's container as the active one
+            currContainer = formationContainers[indexToDelete - 1];
+
+            // Set the new current container's preview canvas as the active one
+            currPreviewCanvas = currContainer.children[1];
+
+            // Set the new current preview canvas' context as the active one
+            currPreviewContext = currPreviewCanvas.getContext('2d');
+
+            // Highlight the new current Formation container
+            currContainer.style.backgroundColor = '#E6A39E';
+            currPreviewCanvas.style.borderColor = 'black';
+
+            repositionIcons();
+        }
+
+        // If index of Formation found
+        if (indexToDelete > -1) {
+            // Remove Formation object
+            formations.splice(indexToDelete, 1);
+
+            // Remove Formation's HTML container after 
+            formationContainers.splice(indexToDelete, 1);
+        }
+
+        /* Delete Formation's HTML container from the DOM and update the following ones */
+
+        formationsContainer.removeChild(event.target.parentElement);
+
+        // For all of the Formations after the one deleted
+        for (var i = indexToDelete; i < formationContainers.length; i += 1) {
+            // Update the Formations' numbering
+            var curr = formationsContainer.children[i];
+            curr.children[0].innerHTML -= 1;
+
+            // If a Formation's numbering is changed from having two to one digit, re-adjust its styling
+            if (curr.children[0].innerHTML < 10) {
+                // Update numbering position
+                curr.children[0].style.left = '12px';
+                // Update preview canvas position
+                curr.children[1].style.marginLeft = '17px';
+            }
+        }
+    }
+
     /* Change display of member icons between photos and names */
     function toggleIconView() {
         // True if checkbox is checked. Note: Function associated with click event listener
         // is called before checkbox is checked.
         var checked = document.getElementById('toggle').checked;
 
-        var membersPanel = document.getElementById('members-panel');
         var memberName;
 
         // Photos view
@@ -469,7 +533,6 @@
                     // Remove being-dragged styling
                     $(member).removeClass('being-dragged');
 
-                    var membersPanel = document.getElementById('members-panel');
                     var membersPanelLeft = membersPanel.getBoundingClientRect().left;
                     var memberName;
 
@@ -547,12 +610,14 @@
             docClientHeight = document.documentElement.clientHeight;
             canvas = document.getElementById('canvas');
             canvasContext = canvas.getContext('2d');
-
-            // Set up and draw canvas when editor page first loads
-            resizeCanvas();
+            formationsContainer = document.getElementById('formations-container');
+            membersPanel = document.getElementById('members-panel');
 
             // Obtain array of member icon HTML elements
             memberIcons = [].slice.call(document.getElementsByClassName('member-icon'));
+
+            // Set up and draw canvas when editor page first loads
+            resizeCanvas();
 
             // Track initial left and top offsets of member icons
             memberIcons.forEach(function(member) {
@@ -565,8 +630,6 @@
             newFormationBtn.addEventListener('click', addFormation, false);
 
             // Add scroll functionality to filmstrip
-            var formationsContainer = document.getElementById('formations-container');
-            var membersPanel = document.getElementById('members-panel');
             $(formationsContainer).slimScroll({
                 height: membersPanel.offsetHeight - $(newFormationBtn).outerHeight(true) + 'px',
                 size: '4px',
