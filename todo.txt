@@ -1,32 +1,41 @@
 ---To Do---
-  - fix filmstrip spacing with 2 digit numbers
+  - implement deleting formation when delete button clicked
+  - implement animation for deleting formation
 
-  - implement deleting formation
+  - implement jumping scroll bar when new formation added
+  - add button click feedback for 'new formation' button
 
-  - multi-select / multi-select with shift
+  - prevent member icons from being dropped on other icons
 
-  - making sure an icon can't be dropped on another icon
+  - implement multi-select (with shift too)
 
-  - displaying different profile directions
-
-  - adding new member ... (watch out for length of name)
-  - scrollable members panel
+  - figure out user interaction for adding new members (watch out for length of name)
+  - make members panel scrollable
 
   ...
+
+  - implement ability to highlight members with different colors
+
+  - implement ability to change profile direction of member icons
 
   - fix positioning within members panel when in names view
   - work on color of member icons in names view
 
 ---Figure out implementation details---
-  - traffic / shortest distance / display traffic routes / to see if the
-    traffic would work out
-  - formation suggestions / templates / suggestions based on given number of
-    people / draw examples from existing sets (e.g. Body Rock)
+  - determining shortest distance traffic routes for each member icon
+  - displaying traffic routes
+  - traffic animation that prevents member icons from going through each other
+  - traffic animation between formations (dancers coming onto stage from left/right offstage)
+  - suggestions or templates for formations (based on number of members desired)
   - way to share blocking & notes with dancers
+  - option to turn off 'snapping to grid' for selected groups of member icons
+  - different traveling animation speed for different member icons (should this be automatic)
+  - pairing formation changes with music
+  - social-media-like platform to view friends' formations
+  - adding dimensions of stages
 
 ---See if users would want---
-  - highlighting people with different colors
-  - fix adding new formations to copy placements of currently selected formation
+  - copy previous placement of member icons when adding new formation
 
 ---User Interviews---
 Christian
@@ -38,3 +47,10 @@ Daniel
 Sausages - Gordon, ...
 FP - Duncan, ...
 FTL...
+
+---Other---
++ https://www.toptal.com/javascript/10-most-common-javascript-mistakes
+- UI colors (design black & white first)
+- responsiveness (design for mobile first)
+- error handling
+- web browser dependencies

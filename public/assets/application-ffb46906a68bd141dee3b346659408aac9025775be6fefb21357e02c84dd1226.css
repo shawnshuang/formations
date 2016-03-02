@@ -1413,131 +1413,6 @@ kbd {
 
 .top-bar-right {
   float: right; }
-html {
-  min-height: 100%;
-  overflow-x: hidden;
-  width: 100%; }
-  html body {
-    font-family: 'Lato', sans-serif;
-    height: 100vh; }
-
-/* Nav bar styling specific to the editor page */
-.editor .top-bar {
-  background-color: #556170;
-  padding: 0px 10px 0px 10px; }
-  .editor .top-bar .menu-text {
-    color: white;
-    font-weight: bold;
-    font-size: 1.5em; }
-  .editor .top-bar .top-bar-right {
-    margin-top: 4px; }
-    .editor .top-bar .top-bar-right a {
-      color: white;
-      font-weight: bold; }
-
-/* Styling for editor canvas & tool panels */
-#editor-wrapper {
-  display: flex;
-  flex-flow: row;
-  min-height: calc(100% - 46px);
-  position: relative; }
-  #editor-wrapper #filmstrip {
-    background-color: #D66860;
-    float: left;
-    margin: 0 10px 0 0;
-    width: 10%; }
-  #editor-wrapper #canvas {
-    background-color: #D3DBDE;
-    float: left;
-    margin: 10px 0 10px 0; }
-  #editor-wrapper #members-panel {
-    background-color: #D66860;
-    float: left;
-    margin: 0 0 0 10px;
-    width: 20%; }
-    #editor-wrapper #members-panel #members-panel-title {
-      border-bottom-color: white;
-      border-bottom-style: solid;
-      border-bottom-width: 2px;
-      color: white;
-      font-weight: bold;
-      margin: 0px 15px 0px 15px;
-      padding: 10px 0px 10px 0px;
-      text-align: center; }
-
-/* Styling for members in members panel */
-.clearfix:after {
-  content: " ";
-  display: block;
-  height: 0;
-  clear: both; }
-
-.members-container {
-  margin: 15px auto;
-  width: 90%; }
-  .members-container .indiv-member-container {
-    -webkit-transition: height 0.5s linear 0s, width 0.5s linear 0s;
-    float: left;
-    height: 60px;
-    margin: 0px 14px 0px 14px;
-    text-align: center;
-    width: 30px; }
-    .members-container .indiv-member-container .member-icon {
-      -webkit-transition: -webkit-transform 0.2s linear 0s, opacity 0.2s linear 0s;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: cover;
-      border-color: #556170;
-      border-radius: 50%;
-      border-style: solid;
-      border-width: 2px;
-      height: 32px;
-      width: 32px; }
-      .members-container .indiv-member-container .member-icon:hover {
-        cursor: -webkit-grab;
-        cursor: grab; }
-      .members-container .indiv-member-container .member-icon:active {
-        cursor: -webkit-grabbing;
-        cursor: grabbing; }
-    .members-container .indiv-member-container .member-name {
-      color: white;
-      font-size: 0.8em;
-      margin-left: -100%;
-      margin-right: -100%;
-      text-align: center; }
-    .members-container .indiv-member-container #chrystina {
-      background-image: url(/assets/chrystina-8ac0e385c5b2ca0645fabf0ce8363f2fda234e884ae28a8752d28333a10c20c3.jpg); }
-    .members-container .indiv-member-container #gordon {
-      background-image: url(/assets/gordon-e863ddaa67192fac80c7194d2e0ae8d7180e9120748ff41300f6955377528813.jpg); }
-    .members-container .indiv-member-container #jordan {
-      background-image: url(/assets/jordan-e30ebb2dcac2b58db375edadae0942109f317affab1ed1a81499ead48f9150f1.jpg); }
-    .members-container .indiv-member-container #june {
-      background-image: url(/assets/june-2c494003de5ae4ddbad61fe3116e2240fcdadb5c7ad9f010b48734a0ed59ff09.jpg); }
-    .members-container .indiv-member-container #kathy {
-      background-image: url(/assets/kathy-7ca80a18308c1c2f6cf404b9450a894af924c8a8b2b858a52add5083b0640994.jpg); }
-    .members-container .indiv-member-container #kelly {
-      background-image: url(/assets/kelly-275ce2f0c581d9585837eb1c5a2b3384172428149c34021d2a5f7e65b1b6c649.jpg); }
-    .members-container .indiv-member-container #mel {
-      background-image: url(/assets/mel-11b0b623d92eda60f5762396c2384c8d9783072709b3ddb558f044761afb75f7.jpg); }
-    .members-container .indiv-member-container #michael {
-      background-image: url(/assets/michael-f2b06f2adbcd07694414d1d58cff5455c816063b2954b4a6b75fb0f9af1dc56c.jpg); }
-    .members-container .indiv-member-container #mindy {
-      background-image: url(/assets/mindy-da6b4070d13d8908ac0280de5d48b83085e5bb6be09d9ae6dcdef5c87c6e8820.jpg); }
-    .members-container .indiv-member-container #paul {
-      background-image: url(/assets/paul-a1ccf7d8a41ab2085ed9cd4e53aae0caaa5f448506f02ba4181ffd274902c2e6.jpg); }
-    .members-container .indiv-member-container #robert {
-      background-image: url(/assets/robert-a5691f1b88336b892b25807ff30552d9b7378c5b89f5d4a3ee6a74347ba2ecf2.jpg); }
-    .members-container .indiv-member-container #serena {
-      background-image: url(/assets/serena-4a55c25b6885517392231ec1aac1d171a87d14e539a04261f743e5cf79dd004b.jpg); }
-    .members-container .indiv-member-container #shuang {
-      background-image: url(/assets/shuang-048548137050919db240f4ec42984e3ef224aa7de4d4525e273dd0f53c8175dc.jpg); }
-
-/* Styling for drag and drop interactions */
-.being-dragged {
-  /* -webkit-transform: scale(1.5, 1.5); */
-  /* -webkit-transition: -webkit-transform 0.2s linear 0s, opacity 0.2s linear 0s; */
-  -webkit-transition: opacity 0.2s linear 0s;
-  opacity: 0.2; }
 .home .top-bar {
   background-color: transparent;
   color: white;
@@ -1619,6 +1494,253 @@ html {
     margin-top: -8px;
     position: absolute;
     top: 50%; }
+html {
+  -webkit-user-select: none;
+  min-height: 100%;
+  overflow-x: hidden;
+  width: 100%; }
+  html body {
+    font-family: 'Lato', sans-serif;
+    height: 100vh; }
+
+/* Nav bar styling specific to the editor page */
+.editor .top-bar {
+  background-color: #556170;
+  padding: 0px 10px 0px 10px; }
+  .editor .top-bar #logo-text {
+    color: white;
+    font-weight: bold;
+    font-size: 1.5em; }
+  .editor .top-bar .top-bar-right {
+    margin-top: 4px; }
+    .editor .top-bar .top-bar-right a {
+      color: white;
+      font-weight: bold; }
+
+/* Styling for main canvas */
+#editor-wrapper {
+  display: flex;
+  flex-flow: row;
+  min-height: calc(100% - 46px);
+  position: relative; }
+  #editor-wrapper #canvas {
+    background-color: #D3DBDE;
+    float: left;
+    margin: 10px 0 10px 0; }
+
+/* Styling for filmstrip */
+#filmstrip {
+  background-color: #D66860;
+  float: left;
+  margin: 0 10px 0 0;
+  width: 13%; }
+  #filmstrip #new-formation-btn {
+    border-color: white;
+    border-radius: 10px;
+    border-style: solid;
+    border-width: 2px;
+    color: white;
+    font-size: 0.8em;
+    font-weight: bold;
+    left: 50%;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    padding: 8px 25px 8px 25px;
+    position: relative;
+    transform: translateX(-50%);
+    transition: all .2s linear 0s; }
+    #filmstrip #new-formation-btn:hover {
+      background-color: white;
+      color: #D66860;
+      font-weight: bold; }
+    #filmstrip #new-formation-btn:focus {
+      outline: 0; }
+  #filmstrip .preview-slide-container .slide-numbering {
+    bottom: 70px;
+    color: #404040;
+    font-weight: bold;
+    left: 10px;
+    position: relative; }
+  #filmstrip .preview-slide-container .preview-slide {
+    background-color: white;
+    border-color: #707070;
+    border-style: solid;
+    border-width: 2px;
+    margin-left: 15px;
+    margin-top: 6px; }
+
+/* Styling for member icon toggle button
+ * Based off of: http://codepen.io/mallendeo/pen/eLIiG */
+#toggle-container {
+  background-color: white;
+  position: absolute; }
+  #toggle-container .member-icon-toggle {
+    display: none; }
+  #toggle-container #toggle-btn {
+    -webkit-transition: left .2s ease, background .2s ease;
+    background-color: #96A3B3;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: block;
+    font-weight: bold;
+    overflow: hidden;
+    position: relative; }
+    #toggle-container #toggle-btn:before, #toggle-container #toggle-btn:after {
+      -webkit-transition: left .2s ease, background .2s ease;
+      position: absolute;
+      text-align: center;
+      width: 100%; }
+    #toggle-container #toggle-btn:before {
+      content: 'Photos';
+      left: 0; }
+    #toggle-container #toggle-btn:after {
+      content: 'Names';
+      left: 100%; }
+  #toggle-container .member-icon-toggle:checked + #toggle-btn {
+    background-color: #E6A39E; }
+  #toggle-container .member-icon-toggle:checked + #toggle-btn:before {
+    left: -100%; }
+  #toggle-container .member-icon-toggle:checked + #toggle-btn:after {
+    left: 0; }
+
+/* Styling for members panel */
+.clearfix:after {
+  content: " ";
+  display: block;
+  height: 0;
+  clear: both; }
+
+#members-panel {
+  background-color: #D66860;
+  float: left;
+  margin: 0 0 0 10px;
+  width: 20%; }
+  #members-panel #members-panel-title {
+    border-bottom-color: white;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    color: white;
+    font-weight: bold;
+    margin: 0px 15px 0px 15px;
+    padding: 10px 0px 10px 0px;
+    text-align: center; }
+
+#members-container {
+  margin: 15px 0px 0px 15px; }
+  #members-container .indiv-member-container {
+    -webkit-transition: height 0.2s ease;
+    float: left;
+    height: 60px;
+    margin: 0px 9px 0px 9px;
+    width: 40px; }
+    #members-container .indiv-member-container .member-icon {
+      -webkit-transition: opacity 0.4s linear 0s;
+      background-color: #96A3B3;
+      border-color: #556170;
+      border-radius: 50%;
+      border-style: solid;
+      border-width: 2px;
+      display: block;
+      height: 40px;
+      overflow: hidden;
+      position: absolute;
+      width: 40px;
+      z-index: 1; }
+      #members-container .indiv-member-container .member-icon:hover {
+        cursor: -webkit-grab; }
+      #members-container .indiv-member-container .member-icon:active {
+        cursor: -webkit-grabbing; }
+    #members-container .indiv-member-container .member-name {
+      color: white;
+      font-size: 0.7em;
+      margin-left: -100%;
+      margin-right: -100%;
+      margin-top: 40px;
+      text-align: center; }
+    #members-container .indiv-member-container #chrystina:before {
+      background-image: url(/assets/chrystina-8ac0e385c5b2ca0645fabf0ce8363f2fda234e884ae28a8752d28333a10c20c3.jpg); }
+    #members-container .indiv-member-container #chrystina:after {
+      content: 'C. Yu'; }
+    #members-container .indiv-member-container #gordon:before {
+      background-image: url(/assets/gordon-e863ddaa67192fac80c7194d2e0ae8d7180e9120748ff41300f6955377528813.jpg); }
+    #members-container .indiv-member-container #gordon:after {
+      content: 'Gordon'; }
+    #members-container .indiv-member-container #jordan:before {
+      background-image: url(/assets/jordan-e30ebb2dcac2b58db375edadae0942109f317affab1ed1a81499ead48f9150f1.jpg); }
+    #members-container .indiv-member-container #jordan:after {
+      content: 'Jordan'; }
+    #members-container .indiv-member-container #june:before {
+      background-image: url(/assets/june-2c494003de5ae4ddbad61fe3116e2240fcdadb5c7ad9f010b48734a0ed59ff09.jpg); }
+    #members-container .indiv-member-container #june:after {
+      content: 'June'; }
+    #members-container .indiv-member-container #kathy:before {
+      background-image: url(/assets/kathy-7ca80a18308c1c2f6cf404b9450a894af924c8a8b2b858a52add5083b0640994.jpg); }
+    #members-container .indiv-member-container #kathy:after {
+      content: 'Kathy'; }
+    #members-container .indiv-member-container #kelly:before {
+      background-image: url(/assets/kelly-275ce2f0c581d9585837eb1c5a2b3384172428149c34021d2a5f7e65b1b6c649.jpg); }
+    #members-container .indiv-member-container #kelly:after {
+      content: 'Kelly'; }
+    #members-container .indiv-member-container #mel:before {
+      background-image: url(/assets/mel-11b0b623d92eda60f5762396c2384c8d9783072709b3ddb558f044761afb75f7.jpg); }
+    #members-container .indiv-member-container #mel:after {
+      content: 'Mel'; }
+    #members-container .indiv-member-container #michael:before {
+      background-image: url(/assets/michael-f2b06f2adbcd07694414d1d58cff5455c816063b2954b4a6b75fb0f9af1dc56c.jpg); }
+    #members-container .indiv-member-container #michael:after {
+      content: 'Michael'; }
+    #members-container .indiv-member-container #mindy:before {
+      background-image: url(/assets/mindy-da6b4070d13d8908ac0280de5d48b83085e5bb6be09d9ae6dcdef5c87c6e8820.jpg); }
+    #members-container .indiv-member-container #mindy:after {
+      content: 'Mindy'; }
+    #members-container .indiv-member-container #paul:before {
+      background-image: url(/assets/paul-a1ccf7d8a41ab2085ed9cd4e53aae0caaa5f448506f02ba4181ffd274902c2e6.jpg); }
+    #members-container .indiv-member-container #paul:after {
+      content: 'Paul'; }
+    #members-container .indiv-member-container #robert:before {
+      background-image: url(/assets/robert-a5691f1b88336b892b25807ff30552d9b7378c5b89f5d4a3ee6a74347ba2ecf2.jpg); }
+    #members-container .indiv-member-container #robert:after {
+      content: 'Robert'; }
+    #members-container .indiv-member-container #serena:before {
+      background-image: url(/assets/serena-4a55c25b6885517392231ec1aac1d171a87d14e539a04261f743e5cf79dd004b.jpg); }
+    #members-container .indiv-member-container #serena:after {
+      content: 'Serena'; }
+    #members-container .indiv-member-container #shuang:before {
+      background-image: url(/assets/shuang-048548137050919db240f4ec42984e3ef224aa7de4d4525e273dd0f53c8175dc.jpg); }
+    #members-container .indiv-member-container #shuang:after {
+      content: 'Shuang'; }
+
+.member-icon:before {
+  -webkit-transition: left 0.2s ease;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  content: '';
+  height: 40px;
+  left: 0px;
+  position: absolute;
+  width: 100%; }
+
+.member-icon:after {
+  -webkit-transition: left 0.2s ease;
+  background-color: #E6A39E;
+  color: white;
+  font-size: 0.65em;
+  left: 100%;
+  line-height: 36px;
+  position: absolute;
+  text-align: center;
+  width: 100%; }
+
+.names:before {
+  left: -100%; }
+
+.names:after {
+  left: 0px; }
+
+/* Styling for drag and drop interaction */
+.being-dragged {
+  opacity: 0.2; }
 /*
  * This is a manifest file that'll be compiled into application.css, which will include all the files
  * listed below.
@@ -1631,6 +1753,7 @@ html {
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
+
 
 
 

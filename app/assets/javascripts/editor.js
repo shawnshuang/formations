@@ -9,28 +9,29 @@
     var docClientHeight;
     // Main canvas
     var canvas;
-    // HTML5 canvas context for main canvas
+    // HTML canvas context for main canvas
     var canvasContext;
     // Length of grid square in main canvas
     var squareLen;
-    // Member icons
+    // Member icon HTML elements
     var memberIcons;
     // Initial left and top offsets for member icons
     var startingOffsets = {};
-    // Boolean toggle to track if member icons are in photos view or names view
+    // Boolean flag for tracking if member icons are in photos view or names view
     var isPhotoView = true;
     // List of all Formations
     var formations = [];
     // Current active Formation
     var currFormation;
-    // List of all preview slide containers
-    var slideContainers = [];
-    // Current active preview slide container
-    var currSlideContainer;
-    // Current active preview slide canvas
-    var currSlideCanvas;
-    // HTML5 canvas context for current active preview slide canvas
-    var currSlideContext;
+    // List of all HTML containers for Formations. Each container contains the Formation's id number,
+    // a canvas for displaying a small preview of the Formation, and a delete button.
+    var formationContainers = [];
+    // Current active container
+    var currContainer;
+    // Current active preview canvas
+    var currPreviewCanvas;
+    // HTML canvas context for active preview canvas
+    var currPreviewContext;
 
     /*************
      * Formation *
@@ -39,9 +40,9 @@
     /* Formation is an object representation of placements of members.
      *
      * @param {Object} sOffsets -- Object literal that maps member id's to the
-     *                             member icon's starting left and top offsets. */
+     *                             member icons' starting left and top offsets. */
     function Formation(sOffsets) {
-        // All member icons initialized to have starting offsets as their left and top offsets
+        // All placments of member icons initialized as the icons' starting offsets
         this.members = sOffsets;
     }
 
@@ -56,10 +57,10 @@
             if (memberToUpdate.hasOwnProperty(id)) {
                 if (id in this.members) {
                     this.members[id] = memberToUpdate[id];
-                    // Updating member success
+                    // Member successfully updated
                     return true;
                 } else {
-                    // Updating member failure. Member not found.
+                    // Member failed to be updated. Member not found.
                     return false;
                 }
             }
@@ -76,11 +77,11 @@
             // Check that the property is not from a prototype
             if (newMember.hasOwnProperty(id)) {
                 if (id in this.members) {
-                    // Adding member failure. Avoid overwriting an existing member's data.
+                    // New member failed to be added. Such member already exists.
                     return false;
                 } else {
                     this.members[id] = newMember[id];
-                    // Adding member success
+                    // New member successfully added
                     return true;
                 }
             }
@@ -102,7 +103,7 @@
 
         // Setup drawing paths for vertical lines
         for (var x = squareLen; x < canvas.width; x += squareLen) {
-            // Avoid drawing on edges of canvas near toggle button
+            // Avoid drawing on edges of canvas near member icon toggle button
             if (x === squareLen * 2) {
                 canvasContext.moveTo(x, squareLen);
                 canvasContext.lineTo(x, canvas.height);    
@@ -114,7 +115,7 @@
 
         // Setup drawing paths for horizontal lines
         for (var y = squareLen; y < canvas.height; y += squareLen) {
-            // Avoid drawing on edges of canvas near toggle button
+            // Avoid drawing on edges of canvas near member icon toggle button
             if (y === squareLen) {
                 canvasContext.moveTo(squareLen * 2, y);
                 canvasContext.lineTo(canvas.width, y);
@@ -189,9 +190,9 @@
             var membersPanel = document.getElementById('members-panel');
             var memberName;
 
-            // If the member icon is outside of the main canvas, show its name
+            // If the member icon is outside of the main canvas
             if (repositionLeft > membersPanel.getBoundingClientRect().left) {
-                // If member icons are in photos view
+                // If member icons are in photos view, show its name
                 if (isPhotoView) {
                     memberName = $(memberIcons[i]).siblings()[0];
                     $(memberName).show();
@@ -204,25 +205,84 @@
         }
     }
 
-    /* Add new formation object and preview slide */
+    /* Highlight clicked Formation and display its placement of member icons */
+    function viewFormation(event) {
+        // Change the current container's styling back to normal
+        currContainer.style.backgroundColor = '#D66860';
+        currPreviewCanvas.style.borderColor = '#707070';
+
+        var clickedFormationNum;
+
+        // If preview canvas is clicked
+        if (event.target.className === 'preview-slide') {
+            // Set current container to that of the clicked Formation
+            currContainer = event.target.parentElement;
+            // Set current preview canvas to that of the clicked Formation
+            currPreviewCanvas = event.target;
+            // Set the current preview context to that of the clicked Formation
+            currPreviewContext = event.target.getContext('2d');
+
+            // Obtain the clicked Formation's number
+            clickedFormationNum = $(event.target).siblings()[0].innerHTML;
+        // If container itself is clicked
+        } else if (event.target.className === 'preview-slide-container') {
+            // Set current container to that of the clicked Formation
+            currContainer = event.target;
+            // Set current preview canvas to that of the clicked Formation
+            currPreviewCanvas = event.target.children[1];
+            // Set the current preview context to that of the clicked Formation
+            currPreviewContext = event.target.children[1].getContext('2d');
+
+            // Obtain the clicked Formation's number
+            clickedFormationNum = event.target.children[0].innerHTML;
+        // If container numbering is clicked
+        } else if (event.target.className === 'slide-numbering') {
+            // Obtain the numbering's preview canvas sibling
+            var previewSibling = $(event.target).siblings()[0];
+
+            // Set current container to that of the clicked Formation
+            currContainer = event.target.parentElement;
+            // Set current preview canvas to that of the clicked Formation
+            currPreviewCanvas = previewSibling;
+            // Set the current preview context to that of the clicked Formation
+            currPreviewContext = previewSibling.getContext('2d');
+
+            // Obtain the clicked Formation's number
+            clickedFormationNum = event.target.innerHTML;
+        }
+
+        // Highlight the container of the clicked Formation as the new active one
+        currContainer.style.backgroundColor = '#E6A39E';
+        currPreviewCanvas.style.borderColor = 'black';
+
+        // Set the clicked Formation as the current Formation
+        currFormation = formations[clickedFormationNum - 1];
+
+        // Reposition member icons based on the new current Formation
+        repositionIcons();
+    }
+
+    /* Add new Formation */
     function addFormation() {
-        /* Add new formation object */
+        /* Add new Formation object */
 
         // Construct new Formation
         var newFormation = new Formation($.extend(true, {}, startingOffsets));
+
         // Append new Formation to list of all Formations
         formations.push(newFormation);
+
         // Set current Formation to the new Formation
         currFormation = newFormation;
 
-        /* Add new formation preview slide */
+        /* Add new HTML container for the new Formation */
 
-        // Create HTML numbering of preview slide
+        // Create numbering of new Formation
         var numbering = document.createElement('span');
         numbering.className += 'slide-numbering';
         numbering.innerHTML = formations.length;
 
-        // Create HTML of preview slide canvas
+        // Create preview canvas
         var newSlideCanvas = document.createElement('canvas');
         newSlideCanvas.className += 'preview-slide';
         newSlideCanvas.width = Math.floor((canvas.width / canvas.height) * 85);
@@ -230,105 +290,90 @@
         newSlideCanvas.style.width = newSlideCanvas.width + 'px';
         newSlideCanvas.style.height = newSlideCanvas.height + 'px';
 
-        // Create HTML preview slide container
+        // Re-adjust styling if Formation number is two digits
+        if (formations.length > 9) {
+            numbering.style.left = '4px';
+            newSlideCanvas.style.marginLeft = '7px';
+        }
+
+        // Create delete button
+        var deleteBtn = document.createElement('button');
+        deleteBtn.className += 'delete-formation-btn';
+        deleteBtn.type = 'button';
+        deleteBtn.innerHTML = '&#215;';
+
+        // Create container
         var newWrapper = document.createElement('div');
         newWrapper.className += 'preview-slide-container';
 
-        // Append numbering and preview slide canvas as children of container
+        // Append numbering and preview canvas as children of container
         newWrapper.appendChild(numbering);
         newWrapper.appendChild(newSlideCanvas);
+        newWrapper.appendChild(deleteBtn);
 
-        // Highlight clicked Formation and display its placement of member icons
+        // Display translucent delete button and highlight preview canvas border when hover over container
+        newWrapper.addEventListener('mouseenter', function() {
+            deleteBtn.style.opacity = 0.4;
+            if (this !== currContainer) {
+                newSlideCanvas.style.borderColor = '#505050';
+            }
+        }, false);
+
+        // Display translucent delete button when hover over numbering too
+        numbering.addEventListener('mouseenter', function() {
+            deleteBtn.style.opacity = 0.4;
+        }, false);
+
+        // Display translucent delete button when hover over preview canvas within container too
+        newSlideCanvas.addEventListener('mouseenter', function() {
+            deleteBtn.style.opacity = 0.4;
+        }, false);
+
+        // Fully display delete button when hover over button itself
+        deleteBtn.addEventListener('mouseover', function() {
+            deleteBtn.style.opacity = 1;
+        }, false);
+
+        // Hide delete button and revert preview canvas border color when mouse leaves container
+        newWrapper.addEventListener('mouseleave', function() {
+            deleteBtn.style.opacity = 0;
+            if (this !== currContainer) {
+                newSlideCanvas.style.borderColor = '#808080';
+            }
+        }, false);
+
+        // Highlight container and display its placement of member icons when Formation is clicked
         newWrapper.addEventListener('click', viewFormation, false);
 
-        // Add preview slide container to formations container
+        // Delete formation object and preview slide when its delete button is clicked
+        // deleteBtn.addEventListener('click', function(event) {
+        //     event.stopPropagation();
+        //     deleteFormation();
+        // }, false);
+
+        // Add fully constructed Formation container to document
         var formationsContainer = document.getElementById('formations-container');
         formationsContainer.appendChild(newWrapper);
 
         // If there is more than one Formation
-        if (typeof currSlideContainer !== 'undefined') {
-            // Change the current preview slide's styling back to normal
-            currSlideContainer.style.backgroundColor = '#D66860';
-            currSlideCanvas.style.borderColor = '#707070';
+        if (typeof currContainer !== 'undefined') {
+            // Change the current container's styling back to normal
+            currContainer.style.backgroundColor = '#D66860';
+            currPreviewCanvas.style.borderColor = '#707070';
         }
 
-        // Append new preview slide container to list of all containers
-        slideContainers.push(newWrapper);
-        // Set current slide container to the new container
-        currSlideContainer = newWrapper;
-        // Set current slide canvas to the new preview slide canvas
-        currSlideCanvas = newSlideCanvas;
-        // Set the current slide context to that of the current slide canvas
-        currSlideContext = newSlideCanvas.getContext('2d');
+        // Append new container to list of all containers
+        formationContainers.push(newWrapper);
+        // Set current container to the newly created one
+        currContainer = newWrapper;
+        // Set current preview canvas to the newly created one
+        currPreviewCanvas = newSlideCanvas;
+        // Set the current preview context to the newly created one
+        currPreviewContext = newSlideCanvas.getContext('2d');
 
-        // Highlight the new slide as the currently active one
-        currSlideContainer.style.backgroundColor = '#E6A39E';
-        currSlideCanvas.style.borderColor = 'black';
-
-        // Reposition member icons based on new current Formation
-        repositionIcons();
-    }
-
-    /* Highlight clicked Formation and display its placement of member icons */
-    function viewFormation(event) {
-        // Change the current preview slide's styling back to normal
-        currSlideContainer.style.backgroundColor = '#D66860';
-        currSlideCanvas.style.borderColor = '#707070';
-
-        var clickedFormationNum;
-
-        // If preview slide canvas is clicked
-        if (event.target.className === 'preview-slide') {
-            // Set current slide container to the new container
-            currSlideContainer = event.target.parentElement;
-            // Set current slide canvas to the new preview slide canvas
-            currSlideCanvas = event.target;
-            // Set the current slide context to that of the current slide canvas
-            currSlideContext = event.target.getContext('2d');
-
-            // Highlight the new slide as the currently active one
-            currSlideContainer.style.backgroundColor = '#E6A39E';
-            currSlideCanvas.style.borderColor = 'black';
-
-            // Define the clicked Formation's number
-            clickedFormationNum = $(event.target).siblings()[0].innerHTML;
-        // If slide container is clicked
-        } else if (event.target.className === 'preview-slide-container') {
-            // Set current slide container to the new container
-            currSlideContainer = event.target;
-            // Set current slide canvas to the new preview slide canvas
-            currSlideCanvas = event.target.children[1];
-            // Set the current slide context to that of the current slide canvas
-            currSlideContext = event.target.children[1].getContext('2d');
-
-            // Highlight the new slide as the currently active one
-            currSlideContainer.style.backgroundColor = '#E6A39E';
-            currSlideCanvas.style.borderColor = 'black';
-
-            // Define the clicked Formation's number
-            clickedFormationNum = event.target.children[0].innerHTML;
-        // If slide numbering is clicked
-        } else if (event.target.className === 'slide-numbering') {
-            // Obtain the numbering's slide sibling
-            var slideSibling = $(event.target).siblings()[0];
-
-            // Set current slide container to the new container
-            currSlideContainer = event.target.parentElement;
-            // Set current slide canvas to the new preview slide canvas
-            currSlideCanvas = slideSibling;
-            // Set the current slide context to that of the current slide canvas
-            currSlideContext = slideSibling.getContext('2d');
-
-            // Highlight the new slide as the currently active one
-            currSlideContainer.style.backgroundColor = '#E6A39E';
-            currSlideCanvas.style.borderColor = 'black';
-
-            // Define the clicked Formation's number
-            clickedFormationNum = event.target.innerHTML;
-        }
-
-        // Set the clicked Formation as the current Formation
-        currFormation = formations[clickedFormationNum - 1];
+        // Highlight the newly created container as the active one
+        currContainer.style.backgroundColor = '#E6A39E';
+        currPreviewCanvas.style.borderColor = 'black';
 
         // Reposition member icons based on new current Formation
         repositionIcons();
@@ -336,7 +381,8 @@
 
     /* Change display of member icons between photos and names */
     function toggleIconView() {
-        // True if checkbox is checked. Note: Click event listener is called before checkbox is checked.
+        // True if checkbox is checked. Note: Function associated with click event listener
+        // is called before checkbox is checked.
         var checked = document.getElementById('toggle').checked;
 
         var membersPanel = document.getElementById('members-panel');
@@ -344,7 +390,7 @@
 
         // Photos view
         if (checked) {
-            // Member icons are in photos view
+            // Member icons are now in photos view
             isPhotoView = true;
 
             memberIcons.forEach(function(member){
@@ -353,43 +399,46 @@
 
                 // If the member icon is outside of the main canvas
                 if (member.offsetLeft > membersPanel.getBoundingClientRect().left) {
-                    // Show member name below icon
+                    // Show the member name that exists below the icon
                     memberName = $(member).siblings()[0];
-                    $(memberName).show('400');
+                    $(memberName).show();
                 }
             });
         // Names view
         } else {
-            // Member icons are in names view
+            // Member icons are now in names view
             isPhotoView = false;
 
             memberIcons.forEach(function(member) {
                 // Display member icons as names
                 $(member).addClass('names');
 
-                // Hide member name below icon to avoid repetitive display
+                // Hide the member name that exists below the icon
                 memberName = $(member).siblings()[0];
-                $(memberName).hide('400');
+                $(memberName).hide();
             });
         }
     }
 
-    /* Redraw the current Formation's preview slide canvas */
+    /* Redraw the current Formation's preview canvas */
     function redrawPreviewSlide() {
         // Clear the canvas to avoid drawing over previous drawing
-        currSlideContext.clearRect(0, 0, currSlideCanvas.width, currSlideCanvas.height);
+        currPreviewContext.clearRect(0, 0, currPreviewCanvas.width, currPreviewCanvas.height);
 
         for (var member in currFormation.members) {
             // Check that the property is not from a prototype
             if (currFormation.members.hasOwnProperty(member)) {
-                // For each member, draw appropriately positioned dot on preview slide
-                currSlideContext.beginPath();
-                currSlideContext.arc((currFormation.members[member].left - canvas.offsetLeft) / (canvas.width / currSlideCanvas.width),
-                                   (currFormation.members[member].top - canvas.offsetTop) / (canvas.width / currSlideCanvas.width),
+                // Set up drawing paths
+                currPreviewContext.beginPath();
+                currPreviewContext.arc((currFormation.members[member].left - canvas.offsetLeft) / (canvas.width / currPreviewCanvas.width),
+                                   (currFormation.members[member].top - canvas.offsetTop) / (canvas.width / currPreviewCanvas.width),
                                    3, 0, 2 * Math.PI);
-                currSlideContext.closePath();
-                currSlideContext.fillStyle = '#556170';
-                currSlideContext.fill();
+                currPreviewContext.closePath();
+
+                // Set fill color
+                currPreviewContext.fillStyle = '#556170';
+                // Draw filled circles
+                currPreviewContext.fill();
             }
         }
     }
@@ -420,12 +469,10 @@
                     // Remove being-dragged styling
                     $(member).removeClass('being-dragged');
 
-                    // Members panel
                     var membersPanel = document.getElementById('members-panel');
-                    // Left offset of the members panel
                     var membersPanelLeft = membersPanel.getBoundingClientRect().left;
-                    // Member name for dropped member icon
                     var memberName;
+
                     // New offset coordinates for dropped member
                     var newOffsets = {};
 
@@ -435,7 +482,7 @@
                         if (isPhotoView) {
                             // Show member icon's name
                             memberName = $(event.target).siblings()[0];
-                            $(memberName).show('400');
+                            $(memberName).show();
                         }
 
                         // Update left and top offsets of dropped member
@@ -445,7 +492,7 @@
                         };
                         currFormation.updateMember(newOffsets);
 
-                        // Update preview slide with removal of member from canvas
+                        // Update preview canvas with removal of member from canvas
                         redrawPreviewSlide();
                     } else {
                         // Drop member icon to last snapped location
@@ -456,7 +503,7 @@
 
                         // Hide member icon's name
                         memberName = $(event.target).siblings()[0];
-                        $(memberName).hide('400');
+                        $(memberName).hide();
 
                         // Update left and top offsets of dropped member
                         newOffsets[event.target.id] = {
@@ -465,7 +512,7 @@
                         };
                         currFormation.updateMember(newOffsets);
 
-                        // Update preview slide with dropped member's new location
+                        // Update preview canvas with dropped member's new location
                         redrawPreviewSlide();
                     }
                 },
@@ -473,7 +520,7 @@
                 // Based off of: http://stackoverflow.com/questions/5735270/revert-a-
                 // jquery-draggable-object-back-to-its-original-container-on-out-event-of
                 revert: function(event) {
-                    // Event is true when draggable is dropped on droppable. Else, event is false.
+                    // 'event' is true when draggable is dropped on droppable. Else, event is false.
                     // jQuery reverts the draggable if the revert callback function returns true.
 
                     // Reposition the member icon to its original position
@@ -493,6 +540,7 @@
 
     /* Computations to perform when page DOM is ready */
     function ready() {
+        // If user is on the editor page
         if (window.location.pathname == '/editor') {
             // Define variables
             docClientWidth = document.documentElement.clientWidth;
@@ -503,30 +551,16 @@
             // Set up and draw canvas when editor page first loads
             resizeCanvas();
 
-            // Style toggle button based on length of grid squares
-            var toggleBtn = document.getElementById('toggle-btn');
-            toggleBtn.style.height = squareLen - 4 + 'px';
-            toggleBtn.style.width = squareLen * 2 - 4 + 'px';
-            toggleBtn.style.lineHeight = squareLen - 4 + 'px';
-            toggleBtn.style.marginLeft = 7 + 'px';
-            toggleBtn.style.marginTop = 7 + 'px';
-
-            var toggleContainer = document.getElementById('toggle-container');
-            toggleContainer.style.left = canvas.offsetLeft - 10 + 'px';
-            toggleContainer.style.top = canvas.offsetTop - 10 + 'px';
-            toggleContainer.style.height = squareLen + 10 + 'px';
-            toggleContainer.style.width = squareLen * 2 + 10 + 'px';
-
-            // Create array of member icons
+            // Obtain array of member icon HTML elements
             memberIcons = [].slice.call(document.getElementsByClassName('member-icon'));
 
-            // Track initial left and top offsets for member icons
+            // Track initial left and top offsets of member icons
             memberIcons.forEach(function(member) {
                 startingOffsets[member.id] = { left: member.offsetLeft, 
                                                top:  member.offsetTop };
             });
 
-            // Add formation when new formation button is clicked
+            // Add Formation when 'new formation' button is clicked
             var newFormationBtn = document.getElementById('new-formation-btn');
             newFormationBtn.addEventListener('click', addFormation, false);
 
@@ -539,10 +573,25 @@
                 railVisible: true
             });
 
+            // Style member icon toggle button based on length of grid squares
+            var toggleBtn = document.getElementById('toggle-btn');
+            toggleBtn.style.height = squareLen - 4 + 'px';
+            toggleBtn.style.width = squareLen * 2 - 4 + 'px';
+            toggleBtn.style.lineHeight = squareLen - 4 + 'px';
+            toggleBtn.style.marginLeft = 7 + 'px';
+            toggleBtn.style.marginTop = 7 + 'px';
+
+            // Style toggle button's container
+            var toggleContainer = document.getElementById('toggle-container');
+            toggleContainer.style.left = canvas.offsetLeft - 10 + 'px';
+            toggleContainer.style.top = canvas.offsetTop - 10 + 'px';
+            toggleContainer.style.height = squareLen + 10 + 'px';
+            toggleContainer.style.width = squareLen * 2 + 10 + 'px';
+
             // Toggle member icon view when toggle button is clicked
             toggleBtn.addEventListener('click', toggleIconView, false);
 
-            // Set up first formation object and preview slide
+            // Set up the first Formation
             addFormation();
 
             // Initialize drag and drop functionality
