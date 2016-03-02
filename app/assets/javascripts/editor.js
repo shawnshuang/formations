@@ -22,8 +22,8 @@
     // Initial left and top offsets for member icons
     var startingOffsets = {};
 
-    // HTML container that holds all individual Formation containers
-    var formationsContainer;
+    // HTML wrapper that holds all individual Formation containers
+    var formationsWrapper;
     // HTML element that holds all of the member icons
     var membersPanel;
 
@@ -324,7 +324,7 @@
         newWrapper.addEventListener('mouseenter', function() {
             deleteBtn.style.opacity = 0.4;
             if (this !== currContainer) {
-                newSlideCanvas.style.borderColor = '#505050';
+                newSlideCanvas.style.borderColor = '#707070';
             }
         }, false);
 
@@ -347,7 +347,7 @@
         newWrapper.addEventListener('mouseleave', function() {
             deleteBtn.style.opacity = 0;
             if (this !== currContainer) {
-                newSlideCanvas.style.borderColor = '#808080';
+                newSlideCanvas.style.borderColor = '#A0A0A0';
             }
         }, false);
 
@@ -361,13 +361,13 @@
         }, false);
 
         // Add fully constructed Formation container to the DOM
-        formationsContainer.appendChild(newWrapper);
+        formationsWrapper.appendChild(newWrapper);
 
         // If there is more than one Formation
         if (typeof currContainer !== 'undefined') {
             // Change the current container's styling back to normal
             currContainer.style.backgroundColor = '#D66860';
-            currPreviewCanvas.style.borderColor = '#707070';
+            currPreviewCanvas.style.borderColor = '#A0A0A0';
         }
 
         // Append new container to list of all containers
@@ -382,6 +382,15 @@
         // Highlight the newly created container as the active one
         currContainer.style.backgroundColor = '#E6A39E';
         currPreviewCanvas.style.borderColor = 'black';
+
+        // Jump scrollbar to newly added Formation at bottom
+        $(formationsWrapper).slimScroll({
+            // Prevent other configuration settings from being reverted to defaults
+            color: '#556170',
+            alwaysVisible: true,
+
+            scrollTo: Number.MAX_SAFE_INTEGER + 'px'
+        });
 
         // Reposition member icons based on new current Formation
         repositionIcons();
@@ -426,12 +435,12 @@
 
         /* Delete Formation's HTML container from the DOM and update the following ones */
 
-        formationsContainer.removeChild(event.target.parentElement);
+        formationsWrapper.removeChild(event.target.parentElement);
 
         // For all of the Formations after the one deleted
         for (var i = indexToDelete; i < formationContainers.length; i += 1) {
             // Update the Formations' numbering
-            var curr = formationsContainer.children[i];
+            var curr = formationsWrapper.children[i];
             curr.children[0].innerHTML -= 1;
 
             // If a Formation's numbering is changed from having two to one digit, re-adjust its styling
@@ -610,7 +619,7 @@
             docClientHeight = document.documentElement.clientHeight;
             canvas = document.getElementById('canvas');
             canvasContext = canvas.getContext('2d');
-            formationsContainer = document.getElementById('formations-container');
+            formationsWrapper = document.getElementById('formations-wrapper');
             membersPanel = document.getElementById('members-panel');
 
             // Obtain array of member icon HTML elements
@@ -630,11 +639,16 @@
             newFormationBtn.addEventListener('click', addFormation, false);
 
             // Add scroll functionality to filmstrip
-            $(formationsContainer).slimScroll({
+            $(formationsWrapper).slimScroll({
                 height: membersPanel.offsetHeight - $(newFormationBtn).outerHeight(true) + 'px',
                 size: '4px',
-                railVisible: true
+                color: '#556170',
+                alwaysVisible: true
             });
+
+            // Edit jQuery slimScroll's opacity for scollbar
+            var scrollBar = document.getElementsByClassName('slimScrollBar')[0];
+            scrollBar.style.opacity = '1';
 
             // Style member icon toggle button based on length of grid squares
             var toggleBtn = document.getElementById('toggle-btn');

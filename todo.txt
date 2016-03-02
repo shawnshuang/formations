@@ -1,15 +1,9 @@
 ---To Do---
-  - formationsContainer v. formationContainer
-  - changing coloring when highlighting canvas border
-  - implement animation for deleting formation
-
-  - implement jumping scroll bar when new formation added
-  - add button click feedback for 'new formation' button
-
   - prevent member icons from being dropped on other icons
 
   - implement multi-select (with shift too)
 
+  - finish reading Hartl's RoR Tutorial
   - figure out user interaction for adding new members (watch out for length of name)
   - make members panel scrollable
 
@@ -35,8 +29,10 @@
   - social-media-like platform to view friends' formations
   - adding dimensions of stages
 
----See if users would want---
+---See if users would want / need---
   - copy previous placement of member icons when adding new formation
+  - ability to add new formation after currently selected formation
+  - implement animation for deleting formation
 
 ---User Interviews---
 Christian

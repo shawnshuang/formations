@@ -65,7 +65,7 @@ html {
         padding: 8px 25px 8px 25px;
         position: relative;
         transform: translateX(-50%);
-        transition: all .2s linear 0s;
+        transition: all .1s ease 0s;
         &:hover {
             background-color: white;
             color: #D66860;
@@ -87,7 +87,7 @@ html {
         }
         .preview-slide {
             background-color: white;
-            border-color: #808080;
+            border-color: #A0A0A0;
             border-style: solid;
             border-width: 2px;
             margin-left: 17px;
@@ -180,6 +180,7 @@ html {
         border-bottom-style: solid;
         border-bottom-width: 2px;
         color: white;
+        cursor: default;
         font-weight: bold;
         margin: 0px 15px 0px 15px;
         padding: 10px 0px 10px 0px;
