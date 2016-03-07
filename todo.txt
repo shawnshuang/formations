@@ -1,7 +1,21 @@
 ---To Do---
+  - move toggle button
+  - add formation button: click animation
+  - toggle button: styling, hover animation, click animation
+
+  - bug: when only one formation left, need to click delete twice
+
   - prevent member icons from being dropped on other icons
 
+  - undoing formation delete
+ 
+  - ability to add new formation after currently selected formation
+  - ability to move formations
+
   - implement multi-select (with shift too)
+
+  - responsiveness
+  - web browser dependencies
 
   - finish reading Hartl's RoR Tutorial
   - figure out user interaction for adding new members (watch out for length of name)
@@ -9,30 +23,33 @@
 
   ...
 
-  - implement ability to highlight members with different colors
-
   - implement ability to change profile direction of member icons
+  - suggestions or templates for formations (based on number of members desired)
+  - option to turn off 'snapping to grid' for selected groups of member icons
+
+  ...
+
+  [styling]
+  - shadows: nav bar, two side panels, main canvas, member icons
+  - spacing: give filmstrip more width, give main canvas more surrounding white space, make scrollbar bigger & give more distance
 
   - fix positioning within members panel when in names view
-  - work on color of member icons in names view
 
 ---Figure out implementation details---
   - determining shortest distance traffic routes for each member icon
   - displaying traffic routes
   - traffic animation that prevents member icons from going through each other
   - traffic animation between formations (dancers coming onto stage from left/right offstage)
-  - suggestions or templates for formations (based on number of members desired)
   - way to share blocking & notes with dancers
-  - option to turn off 'snapping to grid' for selected groups of member icons
   - different traveling animation speed for different member icons (should this be automatic)
   - pairing formation changes with music
   - social-media-like platform to view friends' formations
   - adding dimensions of stages
+  - implement ability to highlight members with different colors
 
 ---See if users would want / need---
-  - copy previous placement of member icons when adding new formation
-  - ability to add new formation after currently selected formation
-  - implement animation for deleting formation
+- copy previous placement of member icons when adding new formation
+- implement animation for deleting formation
 
 ---User Interviews---
 Christian
@@ -46,9 +63,5 @@ FP - Duncan, ...
 FTL...
 
 ---Other---
-+ https://www.toptal.com/javascript/10-most-common-javascript-mistakes
-   - JS memory leaks
-- UI colors (design black & white first)
-- responsiveness (design for mobile first)
++ https://www.toptal.com/javascript/10-most-common-javascript-mistakes (JS memory leaks)
 - error handling
-- web browser dependencies

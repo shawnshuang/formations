@@ -136,7 +136,7 @@
         }
 
         // Set stroke color
-        canvasContext.strokeStyle = '#C0C0C0';
+        canvasContext.strokeStyle = '#ECEFF1';
         // Draw the lines
         canvasContext.stroke();
     }
@@ -217,8 +217,8 @@
     /* Highlight clicked Formation and display its placement of member icons */
     function viewFormation(event) {
         // Change the current container's styling back to normal
-        currContainer.style.backgroundColor = '#D66860';
-        currPreviewCanvas.style.borderColor = '#707070';
+        currContainer.style.backgroundColor = '#546E7A';
+        currPreviewCanvas.style.borderColor = '#C0C0C0';
 
         var clickedFormationNum;
 
@@ -261,8 +261,8 @@
         }
 
         // Highlight the container of the clicked Formation as the new active one
-        currContainer.style.backgroundColor = '#E6A39E';
-        currPreviewCanvas.style.borderColor = 'black';
+        currContainer.style.backgroundColor = '#EF6D60';
+        currPreviewCanvas.style.borderColor = '#505050';
 
         // Set the clicked Formation as the current Formation
         currFormation = formations[clickedFormationNum - 1];
@@ -347,7 +347,7 @@
         newWrapper.addEventListener('mouseleave', function() {
             deleteBtn.style.opacity = 0;
             if (this !== currContainer) {
-                newSlideCanvas.style.borderColor = '#A0A0A0';
+                newSlideCanvas.style.borderColor = '#C0C0C0';
             }
         }, false);
 
@@ -366,8 +366,8 @@
         // If there is more than one Formation
         if (typeof currContainer !== 'undefined') {
             // Change the current container's styling back to normal
-            currContainer.style.backgroundColor = '#D66860';
-            currPreviewCanvas.style.borderColor = '#A0A0A0';
+            currContainer.style.backgroundColor = '#546E7A';
+            currPreviewCanvas.style.borderColor = '#C0C0C0';
         }
 
         // Append new container to list of all containers
@@ -380,13 +380,13 @@
         currPreviewContext = newSlideCanvas.getContext('2d');
 
         // Highlight the newly created container as the active one
-        currContainer.style.backgroundColor = '#E6A39E';
-        currPreviewCanvas.style.borderColor = 'black';
+        currContainer.style.backgroundColor = '#EF6D60';
+        currPreviewCanvas.style.borderColor = '#505050';
 
         // Jump scrollbar to newly added Formation at bottom
         $(formationsWrapper).slimScroll({
             // Prevent other configuration settings from being reverted to defaults
-            color: '#556170',
+            color: '#37474F',
             alwaysVisible: true,
 
             scrollTo: Number.MAX_SAFE_INTEGER + 'px'
@@ -418,8 +418,8 @@
             currPreviewContext = currPreviewCanvas.getContext('2d');
 
             // Highlight the new current Formation container
-            currContainer.style.backgroundColor = '#E6A39E';
-            currPreviewCanvas.style.borderColor = 'black';
+            currContainer.style.backgroundColor = '#EF6D60';
+            currPreviewCanvas.style.borderColor = '#505050';
 
             repositionIcons();
         }
@@ -535,12 +535,29 @@
                 },
                 // Callback function for whenever element is dragged
                 drag: function(event) {
-                    // For now, do nothing
+                    // During dragging, cursor style may switch from grabbing to default if cursor is dragged
+                    // a little out of member icon edge. Set canvas cursor style to grabbing during dragging
+                    // to prevent this.
+                    canvas.style.cursor = '-webkit-grabbing';
+
+                    // Prevent member icons from being placed on top of other icons
+                    for (var mem in currFormation.members) {
+                        // Check that the property is not from a prototype
+                        if (currFormation.members.hasOwnProperty(mem)) {
+                            if (parseInt(member.style.left, 10) === currFormation.members[mem].left &&
+                                parseInt(member.style.top, 10)  === currFormation.members[mem].top) {
+                                // To Do: styling to display user cannot drop here
+                            }
+                        }
+                    }
                 },
                 // Callback function for when dragged element is dropped
                 stop: function(event) {
                     // Remove being-dragged styling
                     $(member).removeClass('being-dragged');
+
+                    // Change canvas cursor style back to default
+                    canvas.style.cursor = 'default';
 
                     var membersPanelLeft = membersPanel.getBoundingClientRect().left;
                     var memberName;
@@ -573,10 +590,24 @@
                         event.target.style.left = newLeft + 'px';
                         event.target.style.top = newTop + 'px';
 
+                        // Prevent member icons from being placed on top of other icons
+                        for (var mem in currFormation.members) {
+                            // Check that the property is not from a prototype
+                            if (currFormation.members.hasOwnProperty(mem)) {
+                                if (parseInt(member.style.left, 10) === currFormation.members[mem].left &&
+                                    parseInt(member.style.top, 10)  === currFormation.members[mem].top) {
+
+                                    event.target.style.left = '150px';
+                                    event.target.style.top = '150px';
+                                }
+                            }
+                        }
+
                         // Hide member icon's name
                         memberName = $(event.target).siblings()[0];
                         $(memberName).hide();
 
+                        // To Do: Update this accordingly
                         // Update left and top offsets of dropped member
                         newOffsets[event.target.id] = {
                             left: newLeft,
@@ -642,7 +673,7 @@
             $(formationsWrapper).slimScroll({
                 height: membersPanel.offsetHeight - $(newFormationBtn).outerHeight(true) + 'px',
                 size: '4px',
-                color: '#556170',
+                color: '#37474F',
                 alwaysVisible: true
             });
 
