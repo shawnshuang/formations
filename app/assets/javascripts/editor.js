@@ -408,9 +408,33 @@
                 // Re-add the Formation back to the DOM
                 formationsWrapper.children[deletedIndex - 1].insertAdjacentElement('afterEnd', currContainer);
 
-                // Highlight the re-added container as the active one
-                currContainer.style.backgroundColor = '#EF6D60';
-                currPreviewCanvas.style.borderColor = '#303030';
+                // Style the re-added container normally first
+                currContainer.style.backgroundColor = '#546E7A';
+                currPreviewCanvas.style.borderColor = '#C0C0C0';
+
+                // Re-style the re-added container as the active container after some time
+                setTimeout(function() {
+                    currContainer.style.backgroundColor = '#EF6D60';
+                    currPreviewCanvas.style.borderColor = '#303030';
+                }, 200);
+
+                // Hide delete button when Formation re-added
+                currContainer.children[2].style.opacity = 0;
+
+                // For all of the Formations after the re-added one
+                for (var i = deletedIndex + 1; i < formationContainers.length; i += 1) {
+                    // Update the Formations' numbering
+                    var curr = formationsWrapper.children[i];
+                    curr.children[0].innerHTML = parseInt(curr.children[0].innerHTML, 10) + 1;
+
+                    // If a Formation's numbering is changed from having one to two digits, re-adjust its styling
+                    if (curr.children[0].innerHTML > 9) {
+                        // Update numbering position
+                        curr.children[0].style.left = '4px';
+                        // Update preview canvas position
+                        curr.children[1].style.marginLeft = '7px';
+                    }
+                }
 
                 // Reposition member icons based on new current Formation
                 repositionIcons();
@@ -439,9 +463,15 @@
         // Set the current preview context to the newly created one
         currPreviewContext = newSlideCanvas.getContext('2d');
 
-        // Highlight the newly created container as the active one
-        currContainer.style.backgroundColor = '#EF6D60';
-        currPreviewCanvas.style.borderColor = '#303030';
+        // Style the re-added container normally first
+        currContainer.style.backgroundColor = '#546E7A';
+        currPreviewCanvas.style.borderColor = '#C0C0C0';
+
+        // Re-style the re-added container as the active container after some time
+        setTimeout(function() {
+            currContainer.style.backgroundColor = '#EF6D60';
+            currPreviewCanvas.style.borderColor = '#303030';
+        }, 50);
 
         // Jump scrollbar to newly added Formation at bottom
         $(formationsWrapper).slimScroll({
