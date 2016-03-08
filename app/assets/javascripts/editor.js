@@ -46,6 +46,11 @@
     // HTML canvas context for active preview canvas
     var currPreviewContext;
 
+    // Most recently deleted Formation object
+    var lastDeletedFormation;
+    // Most recently deleted Formation container
+    var lastDeletedContainer;
+
     /*************
      * Formation *
      *************/
@@ -374,10 +379,41 @@
                 // Clear the toast message when undo link is clicked
                 toastr.remove();
 
+                // Display confirmation for undo action
                 toastr.info('The delete has been undone.');
 
-                // To Do:
-                // - undo Formation delete
+                // Obtain deleted Formation's index
+                var deletedIndex = numbering.innerHTML - 1;
+
+                // If there is at least 1 Formation other than deleted one, change highlighting of
+                // currFormation back to normal
+                if (formations.length > 0) {
+                    currContainer.style.backgroundColor = '#546E7A';
+                    currPreviewCanvas.style.borderColor = '#C0C0C0';
+                }
+
+                // Set most recently deleted Formation as the new current Formation
+                currFormation = lastDeletedFormation;
+                // Add most recently deleted Formation back to formations[]
+                formations.splice(deletedIndex, 0, lastDeletedFormation);
+                // Set most recently deleted Formation as current Formation container
+                currContainer = lastDeletedContainer;
+                // Update current preview canvas
+                currPreviewCanvas = currContainer.children[1];
+                // Update current preview canvas context
+                currPreviewContext = currPreviewCanvas.getContext('2d');
+                // Add most recently deleted container back to formationContainers[]
+                formationContainers.splice(deletedIndex, 0, lastDeletedContainer);
+
+                // Re-add the Formation back to the DOM
+                formationsWrapper.children[deletedIndex - 1].insertAdjacentElement('afterEnd', currContainer);
+
+                // Highlight the re-added container as the active one
+                currContainer.style.backgroundColor = '#EF6D60';
+                currPreviewCanvas.style.borderColor = '#303030';
+
+                // Reposition member icons based on new current Formation
+                repositionIcons();
             }, false);
 
             // Delete the Formation
@@ -454,10 +490,10 @@
         // If index of Formation found
         if (indexToDelete > -1) {
             // Remove Formation object
-            formations.splice(indexToDelete, 1);
+            lastDeletedFormation = formations.splice(indexToDelete, 1)[0];
 
             // Remove Formation's HTML container after 
-            formationContainers.splice(indexToDelete, 1);
+            lastDeletedContainer = formationContainers.splice(indexToDelete, 1)[0];
         }
 
         /* Delete Formation's HTML container from the DOM and update the following ones */
