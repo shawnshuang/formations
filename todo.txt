@@ -1,21 +1,13 @@
 ---To Do---
-  - move toggle button
-  - add formation button: click animation
-  - toggle button: styling, hover animation, click animation
-
-  - bug: when only one formation left, need to click delete twice
-
-  - prevent member icons from being dropped on other icons
-
   - undoing formation delete
- 
-  - ability to add new formation after currently selected formation
-  - ability to move formations
 
-  - implement multi-select (with shift too)
-
-  - responsiveness
-  - web browser dependencies
+  [animations]
+  - selecting formation to view
+  - icons & names when switching between formations
+  - adding formation
+  - deleting formation
+  - clicking delete formation button
+  - clicking add formation button
 
   - finish reading Hartl's RoR Tutorial
   - figure out user interaction for adding new members (watch out for length of name)
@@ -23,17 +15,23 @@
 
   ...
 
+  [styling]
+  - shadows: nav bar, two side panels, main canvas, member icons, toast
+     - fix shadow for add formation button
+  - give main canvas more surrounding white space if add shadows, make scrollbar bigger & give more distance
+  - put a bit of space at top and bottom of scroll bar
+
+  - prevent member icons from being dropped on other icons
+  - ability to add new formation after currently selected formation
+  - ability to move formations
+
+  - implement multi-select (with shift too)
   - implement ability to change profile direction of member icons
   - suggestions or templates for formations (based on number of members desired)
   - option to turn off 'snapping to grid' for selected groups of member icons
 
-  ...
-
-  [styling]
-  - shadows: nav bar, two side panels, main canvas, member icons
-  - spacing: give filmstrip more width, give main canvas more surrounding white space, make scrollbar bigger & give more distance
-
-  - fix positioning within members panel when in names view
+  - responsiveness
+  - web browser dependencies
 
 ---Figure out implementation details---
   - determining shortest distance traffic routes for each member icon

@@ -22,6 +22,8 @@
     // Initial left and top offsets for member icons
     var startingOffsets = {};
 
+    // Button for adding new Formations
+    var newFormationBtn;
     // HTML wrapper that holds all individual Formation containers
     var formationsWrapper;
     // HTML element that holds all of the member icons
@@ -114,25 +116,25 @@
         // Setup drawing paths for vertical lines
         for (var x = squareLen; x < canvas.width; x += squareLen) {
             // Avoid drawing on edges of canvas near member icon toggle button
-            if (x === squareLen * 2) {
-                canvasContext.moveTo(x, squareLen);
-                canvasContext.lineTo(x, canvas.height);    
-            } else {
-                canvasContext.moveTo(x, 0);
-                canvasContext.lineTo(x, canvas.height);
-            }
+            // if (x === squareLen * 2) {
+            //     canvasContext.moveTo(x, squareLen);
+            //     canvasContext.lineTo(x, canvas.height);    
+            // } else {
+            canvasContext.moveTo(x, 0);
+            canvasContext.lineTo(x, canvas.height);
+            // }
         }
 
         // Setup drawing paths for horizontal lines
         for (var y = squareLen; y < canvas.height; y += squareLen) {
             // Avoid drawing on edges of canvas near member icon toggle button
-            if (y === squareLen) {
-                canvasContext.moveTo(squareLen * 2, y);
-                canvasContext.lineTo(canvas.width, y);
-            } else {
-                canvasContext.moveTo(0, y);
-                canvasContext.lineTo(canvas.width, y);
-            }
+            // if (y === squareLen) {
+            //     canvasContext.moveTo(squareLen * 2, y);
+            //     canvasContext.lineTo(canvas.width, y);
+            // } else {
+            canvasContext.moveTo(0, y);
+            canvasContext.lineTo(canvas.width, y);
+            // }
         }
 
         // Set stroke color
@@ -177,7 +179,7 @@
 
     /* Resize main canvas based on new window size */
     function resizeCanvas() {
-        canvas.width = docClientWidth * 0.67;
+        canvas.width = docClientWidth * 0.66;
         canvas.height = docClientHeight - 66;
         canvas.style.width = canvas.width + 'px';
         canvas.style.height = canvas.height + 'px';
@@ -204,12 +206,14 @@
                 // If member icons are in photos view, show its name
                 if (isPhotoView) {
                     memberName = $(memberIcons[i]).siblings()[0];
-                    $(memberName).show();
+                    // $(memberName).show();
+                    memberName.style.opacity = 1;
                 }
             // If the member icon is inside the main canvas, hide its name
             } else {
                 memberName = $(memberIcons[i]).siblings()[0];
-                $(memberName).hide();
+                // $(memberName).hide();
+                memberName.style.opacity = 0;
             }
         }
     }
@@ -262,7 +266,7 @@
 
         // Highlight the container of the clicked Formation as the new active one
         currContainer.style.backgroundColor = '#EF6D60';
-        currPreviewCanvas.style.borderColor = '#505050';
+        currPreviewCanvas.style.borderColor = '#303030';
 
         // Set the clicked Formation as the current Formation
         currFormation = formations[clickedFormationNum - 1];
@@ -324,7 +328,7 @@
         newWrapper.addEventListener('mouseenter', function() {
             deleteBtn.style.opacity = 0.4;
             if (this !== currContainer) {
-                newSlideCanvas.style.borderColor = '#707070';
+                newSlideCanvas.style.borderColor = '#505050';
             }
         }, false);
 
@@ -357,6 +361,26 @@
         // Delete Formation object and preview canvas when its delete button is clicked
         deleteBtn.addEventListener('click', function(event) {
             event.stopPropagation();
+
+            // Remove any previous toast messages
+            toastr.remove();
+
+            // Display toast message
+            var deleteToast = toastr.info('The formation has been deleted. <a id="undo" style="text-decoration: underline; padding-left: 5px;">Undo</a>');
+            
+            // Undo delete when undo link clicked
+            var undoDelete = document.getElementById('undo');
+            undoDelete.addEventListener('click', function(event) {
+                // Clear the toast message when undo link is clicked
+                toastr.remove();
+
+                toastr.info('The delete has been undone.');
+
+                // To Do:
+                // - undo Formation delete
+            }, false);
+
+            // Delete the Formation
             deleteFormation(event);
         }, false);
 
@@ -381,12 +405,14 @@
 
         // Highlight the newly created container as the active one
         currContainer.style.backgroundColor = '#EF6D60';
-        currPreviewCanvas.style.borderColor = '#505050';
+        currPreviewCanvas.style.borderColor = '#303030';
 
         // Jump scrollbar to newly added Formation at bottom
         $(formationsWrapper).slimScroll({
             // Prevent other configuration settings from being reverted to defaults
+            height: membersPanel.offsetHeight - $(newFormationBtn).outerHeight(true) + 'px',
             color: '#37474F',
+            distance: '4px',
             alwaysVisible: true,
 
             scrollTo: Number.MAX_SAFE_INTEGER + 'px'
@@ -403,8 +429,9 @@
         // Obtain index of Formation to delete
         var indexToDelete = formationContainers.indexOf(event.target.parentElement);
 
-        // If deleted Formation was the active one, need to set new current Formation
-        if (event.target.parentElement === currContainer) {
+        // If deleted Formation was the active one and was not the only one left,
+        // need to set new current Formation
+        if (event.target.parentElement === currContainer && formations.length > 1) {
             // Set the Formation before as the new active one
             currFormation = formations[indexToDelete - 1];
 
@@ -419,7 +446,7 @@
 
             // Highlight the new current Formation container
             currContainer.style.backgroundColor = '#EF6D60';
-            currPreviewCanvas.style.borderColor = '#505050';
+            currPreviewCanvas.style.borderColor = '#303030';
 
             repositionIcons();
         }
@@ -474,7 +501,8 @@
                 if (member.offsetLeft > membersPanel.getBoundingClientRect().left) {
                     // Show the member name that exists below the icon
                     memberName = $(member).siblings()[0];
-                    $(memberName).show();
+                    // $(memberName).show();
+                    memberName.style.opacity = 1;
                 }
             });
         // Names view
@@ -488,7 +516,8 @@
 
                 // Hide the member name that exists below the icon
                 memberName = $(member).siblings()[0];
-                $(memberName).hide();
+                // $(memberName).hide();
+                memberName.style.opacity = 0;
             });
         }
     }
@@ -571,7 +600,8 @@
                         if (isPhotoView) {
                             // Show member icon's name
                             memberName = $(event.target).siblings()[0];
-                            $(memberName).show();
+                            // $(memberName).show();
+                            memberName.style.opacity = 1;
                         }
 
                         // Update left and top offsets of dropped member
@@ -605,7 +635,8 @@
 
                         // Hide member icon's name
                         memberName = $(event.target).siblings()[0];
-                        $(memberName).hide();
+                        // $(memberName).hide();
+                        memberName.style.opacity = 0;
 
                         // To Do: Update this accordingly
                         // Update left and top offsets of dropped member
@@ -650,8 +681,16 @@
             docClientHeight = document.documentElement.clientHeight;
             canvas = document.getElementById('canvas');
             canvasContext = canvas.getContext('2d');
+            newFormationBtn = document.getElementById('new-formation-btn');
             formationsWrapper = document.getElementById('formations-wrapper');
             membersPanel = document.getElementById('members-panel');
+
+            // Setting options for Toastr (JS library for toast messages)
+            toastr.options.positionClass = 'toast-top-center';
+            toastr.options.showDuration = 200;
+            toastr.options.hideDuration = 200;
+            toastr.options.timeOut = 5000;
+            toastr.options.extendedTimeOut = 5000;
 
             // Obtain array of member icon HTML elements
             memberIcons = [].slice.call(document.getElementsByClassName('member-icon'));
@@ -666,14 +705,13 @@
             });
 
             // Add Formation when 'new formation' button is clicked
-            var newFormationBtn = document.getElementById('new-formation-btn');
             newFormationBtn.addEventListener('click', addFormation, false);
 
             // Add scroll functionality to filmstrip
             $(formationsWrapper).slimScroll({
                 height: membersPanel.offsetHeight - $(newFormationBtn).outerHeight(true) + 'px',
-                size: '4px',
                 color: '#37474F',
+                distance: '4px',
                 alwaysVisible: true
             });
 
@@ -683,18 +721,18 @@
 
             // Style member icon toggle button based on length of grid squares
             var toggleBtn = document.getElementById('toggle-btn');
-            toggleBtn.style.height = squareLen - 4 + 'px';
-            toggleBtn.style.width = squareLen * 2 - 4 + 'px';
-            toggleBtn.style.lineHeight = squareLen - 4 + 'px';
-            toggleBtn.style.marginLeft = 7 + 'px';
-            toggleBtn.style.marginTop = 7 + 'px';
+            // toggleBtn.style.height = squareLen - 4 + 'px';
+            // toggleBtn.style.width = squareLen * 2 - 4 + 'px';
+            // toggleBtn.style.lineHeight = squareLen - 4 + 'px';
+            // toggleBtn.style.marginLeft = 7 + 'px';
+            // toggleBtn.style.marginTop = 7 + 'px';
 
             // Style toggle button's container
-            var toggleContainer = document.getElementById('toggle-container');
-            toggleContainer.style.left = canvas.offsetLeft - 10 + 'px';
-            toggleContainer.style.top = canvas.offsetTop - 10 + 'px';
-            toggleContainer.style.height = squareLen + 10 + 'px';
-            toggleContainer.style.width = squareLen * 2 + 10 + 'px';
+            // var toggleContainer = document.getElementById('toggle-container');
+            // toggleContainer.style.left = canvas.offsetLeft - 10 + 'px';
+            // toggleContainer.style.top = canvas.offsetTop - 10 + 'px';
+            // toggleContainer.style.height = squareLen + 10 + 'px';
+            // toggleContainer.style.width = squareLen * 2 + 10 + 'px';
 
             // Toggle member icon view when toggle button is clicked
             toggleBtn.addEventListener('click', toggleIconView, false);

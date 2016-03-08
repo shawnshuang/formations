@@ -16,6 +16,7 @@
 //= require jquery-ui/draggable
 //= require jquery-ui/droppable
 //= require jquery.slimscroll
+//= require toastr
 //= require editor
 //= require turbolinks
 

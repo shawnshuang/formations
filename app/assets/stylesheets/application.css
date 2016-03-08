@@ -11,6 +11,7 @@
  * file per style scope.
  *
  *= require jquery-ui/draggable
+ *= require toastr
  *= require _settings
  *= require foundation_and_overrides
  *= require home
